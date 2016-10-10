@@ -52,6 +52,7 @@ in latex
 ```latex
 \displaystyle{x}=\frac{{-{b}\pm\sqrt{{{b}^{{2}}-{4}{a}{c}}}}}{{{2}{a}}}
 ```
-They will both render the exact same thing.
+
+They will both render the exact same thing. The examples will render correctly [here](https://obedm503.github.io/katex-latex/).
 
 ----
