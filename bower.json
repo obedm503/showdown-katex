@@ -1,0 +1,29 @@
+{
+	"name": "katex-latex",
+	"description": "katex extension for showdown",
+	"main": [
+		"dist/katex-latex.js"
+	],
+	"dependencies": {},
+	"devDependencies": {},
+	"moduleType": [
+		"globals"
+	],
+	"keywords": [
+		"markdown",
+		"katex",
+		"latex",
+		"tex",
+		"math"
+	],
+	"authors": [
+		"obedm503 (https://obedm503.github.io/)"
+	],
+	"license": "MIT",
+	"ignore": [
+		".*",
+		"node_modules",
+		"*.",
+		"src"
+	]
+}

@@ -30,9 +30,12 @@
 					);
 				}
 
-				var $div = $('<div></div>').html(html);//parse html inside a <div>
-				var $code = $('code.latex.language-latex', $div); //find our "code"
-				$code.unwrap().each(function(i, e){// unwrap from <pre> tags
+				//parse html inside a <div>
+				var $div = $('<div></div>').html(html);
+				//find our "code"
+				var $code = $('code.latex.language-latex', $div);
+				// unwrap from <pre> tags
+				$code.unwrap().each(function(i, e){
 
 					var el = $( e );
 					// convert latex to math
