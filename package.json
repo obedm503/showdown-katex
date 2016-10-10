@@ -1,0 +1,36 @@
+{
+  "name": "katex-latex",
+  "author": "obedm503",
+  "homepage": "https://obedm503.github.io/katex-latex/",
+  "description": "katex extension for latex in showdown (markdown + math)",
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/katex-latex.min.js",
+  "npmName": "katex-latex",
+  "npmFileMap": [
+    {
+      "basePath": "dist",
+      "files": [
+        "*"
+      ]
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/obedm503/katex-latex.git"
+  },
+  "dependencies": {
+    "jquery": "^3.1.0",
+    "showdown": "^1.4.3",
+    "katex": "^0.6.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
