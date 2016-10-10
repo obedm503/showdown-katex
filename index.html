@@ -5,12 +5,13 @@
   <script src="https://obedm503.github.io/bootmark/dist/bootmark.bundle.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js"></script>
-	<script src="dist/katex-latex.min.js"></script>
+	<script src="dist/katex-latex.bundle.min.js"></script>
 	<script>
 		// define options. options in individual elements override these
 		$.fn.bootmark.options = {
 			html: {
-				toc: false
+				toc: false,
+				prettifyTheme: 'tomorrow-night-eighties'
 			},
 			showdown: {
 				extensions: ['katex-latex']
@@ -24,29 +25,89 @@
 
 	<!-- examples -->
 	<bootmark>
-#### examples
+## More examples
+
+### square roots
 
 this:
 
-    ```latex
-    c^2 = a^2 + b^2
+    ```asciimath
+
+    c = +- sqrt(a^2 + b^2)
+
     ```
 
 becomes this:
 
-```latex
-c^2 = a^2 + b^2
+```asciimath
+c = +- sqrt(a^2 + b^2 )
 ```
 
 and this:
 
     ```latex
+
     c = \pm\sqrt{a^2 + b^2}
+
     ```
 becomes this:
 
 ```latex
 c = \pm\sqrt{a^2 + b^2}
+```
+
+----
+### sumations
+
+in asciimath
+
+    ```asciimath
+
+    sum_(i=1)^n i^3=((n(n+1))/2)^2
+
+    ```
+
+```asciimath
+sum_(i=1)^n i^3=((n(n+1))/2)^2
+```
+
+in latex
+
+    ```latex
+
+    {\sum_{{{i}={1}}}^{{n}}}{i}^{{3}}={\left(\frac{{{n}{\left({n}+{1}\right)}}}{{2}}\right)}^{{2}}
+
+    ```
+
+```latex
+{\sum_{{{i}={1}}}^{{n}}}{i}^{{3}}={\left(\frac{{{n}{\left({n}+{1}\right)}}}{{2}}\right)}^{{2}}
+```
+
+----
+### simple functions
+
+in asciimath
+
+    ```asciimath
+
+    lim_(x->0) = f(x)' = 2x + 5
+
+    ```
+
+```asciimath
+lim_(x->0) = f(x)' = 2x + 5
+```
+
+in latex
+
+    ```latex
+
+    \lim_{{{x}\to{0}}}={f{{\left({x}\right)}}}'={2}{x}+{5}
+
+    ```
+
+```latex
+\lim_{{{x}\to{0}}}={f{{\left({x}\right)}}}'={2}{x}+{5}
 ```
 	</bootmark>
 

@@ -10,15 +10,30 @@
     module.exports = extension(require('showdown'));
   } else {
     // showdown was not found so we throw
-    throw Error('Could not find showdown library');
+    throw Error('Could not find showdown library.');
   }
-	if(typeof jQuery === 'undefined'){ throw new Error('JQuery is not defined'); }
+	if(typeof jQuery === 'undefined'){
+		throw new Error('JQuery is not defined.');
+	}
+	if(typeof AMTparseAMtoTeX === 'undefined'){
+		console.warn('AMTparseAMtoTeX is not defined. Make sure it is include the ASCIIMathTeXImg.js file.');
+	}
+	if(typeof AMTcgiloc !== 'undefined'){
+		console.warn('A defined AMTcgiloc will cause katex-latex to stop working.');
+	}
 }(function (showdown) {
   // loading extension into showdown
   showdown.extension('katex-latex', function() {
 		return [{
 			type: 'output',
 			filter: function(html){
+				// katex config
+				var config = $.extend({}, {
+					displayMode: true,
+					throwOnError: false, //fail silently
+					errorColor: '#00c2c9'
+				}, window.katex.config );
+
 				//adds some styling to the math
 				if( !$('#katex-latex-styles').length ){
 					$('head').append(
@@ -32,21 +47,35 @@
 
 				//parse html inside a <div>
 				var $div = $('<div></div>').html(html);
-				//find our "code"
-				var $code = $('code.latex.language-latex', $div);
-				// unwrap from <pre> tags
-				$code.unwrap().each(function(i, e){
 
-					var el = $( e );
-					// convert latex to math
-					var htmlFromTxt = katex.renderToString( el.text(), {
-						displayMode: true,
-						throwOnError: false, //fail silently
-						errorColor: '#00c2c9'
+				//find our "code"
+				var $latex = $('code.latex.language-latex', $div);
+				var $asciimath = $('code.asciimath.language-asciimath', $div);
+
+				//handle latex
+				if( $latex.length ){
+					$latex.unwrap().each(function(i, e){
+						var latexEl = $( e );
+						// convert latex to math html
+						var htmlFromLatex = katex.renderToString( latexEl.text(), config );
+						// replace old <code> tags with math html
+						latexEl.replaceWith( '<div class="katex-latex">' + htmlFromLatex + '</div>' );
 					});
-					// replace old <code> tags with math
-					el.replaceWith( '<div class="katex-latex">' + htmlFromTxt + '</div>' );
-				});
+				}
+
+				//handle asciimath
+				if( $asciimath.length ){
+					$asciimath.unwrap().each(function(i, e){
+						var asciiEl = $( e );
+						// convert asciimath to latex
+						var txtFromAsciimath = AMTparseAMtoTeX( asciiEl.text() );
+						// convert latex to math html
+						var htmlFromAsciimath = katex.renderToString( txtFromAsciimath, config );
+						// replace old <code> tags with math html
+						asciiEl.replaceWith( '<div class="katex-latex">' + htmlFromAsciimath + '</div>' );
+					});
+				}
+
 				//return html without the initial <div>
 				return $div.html();
 			}
