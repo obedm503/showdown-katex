@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/obedm503/katex-latex.png?label=ready&title=Ready)](https://waffle.io/obedm503/katex-latex)
 # katex-latex
 
 > https://obedm503.github.io/katex-latex/
