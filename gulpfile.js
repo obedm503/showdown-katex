@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     paths = {
       js: ['./src/katex-latex.js','./dist/ASCIIMathTeXImg.js'],
 			bundle: ['./dist/ASCIIMathTeXImg.min.js', './dist/katex-latex.min.js']
-    };
+    },
+		run = require('gulp-run');
 
 gulp.task('default', ['bundle']);
 
@@ -29,6 +30,7 @@ gulp.task('bundle', ['js'], function(){
     .pipe(gulp.dest('./dist/'));
 });
 
-gulp.task('watch', function(){
+gulp.task('serve', ['bundle'], function(){
   gulp.watch(paths.js, ['bundle']);
+	run('http-server').exec();
 });

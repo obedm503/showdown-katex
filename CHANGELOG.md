@@ -9,6 +9,14 @@
 #### FIX
 - become independent from jQuery
 
+### 0.3.0 2016-12-02
+#### NEW
+- `katex.config` object used to configure katex displayMode, errorColor, and throwOnError
+
+#### FIXED
+- wrapping `<div>` was substituted with a `<span>` to allow for flexibility
+- demo now pretty prints normal code by using `bootmark`
+
 ### 0.2.0 2016-10-10
 #### NEW
 - asciimath support
