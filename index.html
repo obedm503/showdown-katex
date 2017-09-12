@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>katex-latex</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.css">
   <style>
     code {
       padding:2px 4px !important;
@@ -38,13 +38,13 @@
 </head>
 <body style="display:none;" onload="$('body').show();">
   <!-- readme -->
-  <bootmark fetch="README.md"></bootmark>
+  <bootmark src="README.md"></bootmark>
 
 
   <!-- sandboxed demo -->
   <div class="container">
     <div class="row">
-      <h3>Now try the live demo</h3>
+      <h3>Try the live demo</h3>
     </div>
     <div class="row" id="sandbox">
       <div class="col-md-6">
@@ -77,44 +77,44 @@ var some =  normal('code');
     <hr />
   </div>
 
-
   <!-- examples -->
   <bootmark>
+
+slvkndlvnskdvnlskvndslvkndlvnskdvnlskvndsl
+vkndlvnskdvnlskvndslvkndlvnskdvnlskvndslvk
+ndlvnskdvnlskvndslvkndlvnskdvnlskvndslvkndlvnsk
+dvnlskvndslvkndl $$c = +- sqrt(a^2 + b^2 )$$vnskdvnlskvnds
+lvkndlvnskdvnlskvndslvkndlvnskdvnlskvndslvkndlvnskd
+vnlskvndslvkndlvnskdvnlskvndslvkndlvnskdvnlskvnd
+slvkndlvnskdvnlskvndslvkndlvnskdvnlskvnd
+
 ## More examples
 
 ### square roots
-<div class="row">
-  <div class="col col-md-6">
-this:
-
+<div class="row" markdown="1">
+  <div class="col col-md-6"  markdown="1">
     ```asciimath
 
     c = +- sqrt(a^2 + b^2)
 
     ```
-
   </div>
-  <div class="col col-md-6">
-becomes this:
-
+  <div class="col col-md-6" markdown="1">
 ```asciimath
 c = +- sqrt(a^2 + b^2 )
 ```
   </div>
 </div>
 
-<div class="row">
-  <div class="col col-lg-6">
-and this:
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
     ```latex
 
     c = \pm\sqrt{a^2 + b^2}
 
     ```
   </div>
-  <div class="col col-lg-6">
-becomes this:
-
+  <div class="col-md-6" markdown="1">
 ```latex
 c = \pm\sqrt{a^2 + b^2}
 ```
@@ -124,76 +124,75 @@ c = \pm\sqrt{a^2 + b^2}
 ----
 ### sumations
 
-<div class="row">
-  <div class="col col-lg-6">
-in asciimath
-
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
     ```asciimath
 
     sum_(i=1)^n i^3=((n(n+1))/2)^2
 
     ```
   </div>
-  <div class="col col-lg-6">
+  <div class="col-md-6" markdown="1">
 ```asciimath
 sum_(i=1)^n i^3=((n(n+1))/2)^2
 ```
   </div>
 </div>
-
-in latex
-
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
     ```latex
 
     \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
 
     ```
-
+  </div>
+  <div class="col-md-6" markdown="1">
 ```latex
 \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
 ```
+  </div>
+</div>
 
 ----
 ### simple functions
-<div class="row">
-  <div class="col col-lg-6">
-
-  </div>
-  <div class="col col-lg-6">
-
-  </div>
-</div>
-in asciimath
-
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
     ```asciimath
 
     lim_(x->0) = f(x)' = 2x + 5
 
     ```
-
+  </div>
+  <div class="col-md-6" markdown="1">
 ```asciimath
 lim_(x->0) = f(x)' = 2x + 5
 ```
+  </div>
+</div>
 
-in latex
-
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
     ```latex
 
     \lim_{x \to{0}} = f(x)' = 2x+5
 
     ```
-
+  </div>
+  <div class="col-md-6" markdown="1">
 ```latex
 \lim_{x \to{0}} = f(x)' = 2x+5
 ```
+  </div>
+</div>
   </bootmark>
 
   <!-- changelog -->
-  <div class="bootmark" data-fetch="CHANGELOG.md"></div>
+  <div class="bootmark" data-src="CHANGELOG.md"></div>
 
   <script src="https://obedm503.github.io/bootmark/dist/bootmark.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js"></script>
-  <script src="./dist/katex-latex.bundle.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/contrib/auto-render.min.js"></script>
+  <script src="./dist/katex-latex.js"></script>
   <script>
     // define options. options in individual elements override these
     // these do not affect the live demo

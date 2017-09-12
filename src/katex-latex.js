@@ -39,11 +39,11 @@
       type: 'output',
       filter: function(html){
         // katex config
-        var config = $.extend({}, {
-          displayMode: true,
+        const config = Object.assign({}, {
+          displayMode: false,
           throwOnError: false, //fail silently
-          errorColor: '#ff0000'
-        }, window.katex.config );
+          errorColor: '#ff0000',
+        }, window.katex.config);
 
         //adds some styling to the math
         if( !$('#katex-latex-styles').length ){
@@ -65,7 +65,7 @@
           if($elements.length){
             return $elements.unwrap().each(function(i, e){
               var $el = $( e );
-              var tex = ascii ? AMTparseAMtoTeX( $el.text() ) : $el.text();
+              var tex = ascii ? AMTparseAMtoTeX( $el.html() ) : $el.html();
               var html = katex.renderToString( tex, config );
               $el.replaceWith( '<span class="katex-latex">' + html + '</span>' );
             });
@@ -74,6 +74,9 @@
 
         processEls($latex);
         processEls($asciimath, true);
+        if( typeof renderMathInElement !== 'undefined' ){
+          renderMathInElement($div[0], config);
+        }
 
         //return html without the initial <div>
         return $div.html();
