@@ -40,7 +40,7 @@
       filter: function(html){
         // katex config
         const config = Object.assign({}, {
-          displayMode: false,
+          displayMode: true,
           throwOnError: false, //fail silently
           errorColor: '#ff0000',
         }, window.katex.config);

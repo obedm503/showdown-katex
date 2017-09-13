@@ -4,6 +4,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     concat = require('gulp-concat'),
     babel = require('gulp-babel'),
+    queue = require('streamqueue'),
     paths = {
       js: [
         './src/katex-latex.js',
@@ -13,17 +14,19 @@ var gulp = require('gulp'),
         './dist/ASCIIMathTeXImg.min.js',
         './dist/katex-latex.min.js'
       ],
+      katexLatex: './src/katex-latex.js',
+      asciiMath: './src/ASCIIMathTeXImg.js',
     },
     run = require('gulp-run');
 
 gulp.task('default', ['build']);
 
 gulp.task('build', function(){
-  var es5 = gulp.src('./src/katex-latex.js')
+  var es5 = gulp.src(paths.katexLatex)
     .pipe(babel({
       presets: ['env']
     }));
-  var es5Min = gulp.src('./src/katex-latex.js')
+  var es5Min = gulp.src(paths.katexLatex)
     .pipe(babel({
       presets: ['env']
     }))
@@ -32,20 +35,19 @@ gulp.task('build', function(){
         comments: /^!|@preserve|@license|@cc_on/i
       }
     }));
-  var ascii = gulp.src('./src/ASCIIMathTeXImg.js');
-  var asciiMin = gulp.src('./src/ASCIIMathTeXImg.js')
+  var ascii = gulp.src(paths.asciiMath);
+  var asciiMin = gulp.src(paths.asciiMath)
     .pipe(uglify({
       output: {
         comments: /^!|@preserve|@license|@cc_on/i
       }
     }));
-  var raw = merge(ascii)
-    .add(es5)
+  var raw = queue({ objectMode: true }, ascii, es5)
     .pipe(concat('katex-latex.js', { newLine: '\n\n' }))
     .pipe(gulp.dest('./dist/'));
 
-  var min = merge(asciiMin)
-    .add(es5Min)
+  var min = queue({ objectMode: true }, asciiMin, es5Min)
+    // .add()
     .pipe(concat('katex-latex.min.js', { newLine: '\n\n' }))
     .pipe(gulp.dest('./dist/'));
 
@@ -75,5 +77,5 @@ gulp.task('bundle', ['js'], function(){
 });
 
 gulp.task('start', ['build'], function(){
-  gulp.watch(paths.js, ['build']);
+  gulp.watch([paths.katexLatex, paths.asciiMath], ['build']);
 });

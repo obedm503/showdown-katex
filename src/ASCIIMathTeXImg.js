@@ -367,7 +367,7 @@ var noMathRender = false;
 
   // yes
   // pure
-  const AMremoveCharsAndBlanks = (str, n) => {
+  var AMremoveCharsAndBlanks = function(str, n){
     //remove n characters and any following blanks
     var st;
     if (str.charAt(n) == "\\" && str.charAt(n + 1) != "\\" && str.charAt(n + 1) != " ")
@@ -379,7 +379,7 @@ var noMathRender = false;
 
   // yes
   // pure
-  const AMposition = (arr, str, n) => {
+  var AMposition = function(arr, str, n){
     // return position >=n where str appears or would be inserted
     // assumes arr is sorted
     if (n == 0) {
@@ -398,7 +398,7 @@ var noMathRender = false;
 
   // yes
   // AMposition
-  const AMgetSymbol = (str) => {
+  var AMgetSymbol = function(str){
     //return maximal initial substring of str that appears in names
     //return null if there is none
     var k = 0; //new pos
@@ -514,6 +514,7 @@ var noMathRender = false;
   var AMnestingDepth, AMpreviousSymbol, AMcurrentSymbol;
 
   function AMTgetTeXsymbol(symb) {
+    var pre;
     if (typeof symb.val == "boolean" && symb.val) {
       pre = '';
     } else {

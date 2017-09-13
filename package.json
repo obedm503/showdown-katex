@@ -7,7 +7,8 @@
   "license": "MIT",
   "main": "dist/katex-latex.min.js",
   "scripts": {
-    "start": "http-server & gulp start"
+    "clean": "rm -rf dist/",
+    "start": "npm run clean && http-server & gulp start"
   },
   "npmName": "katex-latex",
   "npmFileMap": [
@@ -37,7 +38,8 @@
     "gulp-run": "^1.7.1",
     "gulp-uglify": "^3.0.0",
     "http-server": "^0.10.0",
-    "merge-stream": "^1.0.1"
+    "merge-stream": "^1.0.1",
+    "streamqueue": "^1.1.1"
   },
   "optionalDependencies": {},
   "engines": {
