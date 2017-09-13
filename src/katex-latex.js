@@ -18,18 +18,25 @@
     module.exports = extension(require('showdown'));
   } else {
     // showdown was not found so we throw
-    throw Error('Could not find showdown library.');
-  }
-  if(typeof jQuery === 'undefined'){
-    throw new Error('JQuery is not defined.');
-  }
-  if(typeof AMTparseAMtoTeX === 'undefined'){
-    console.warn('AMTparseAMtoTeX is not defined. Make sure it is include the ASCIIMathTeXImg.js file.');
-  }
-  if(typeof AMTcgiloc !== 'undefined'){
-    console.warn('A defined AMTcgiloc will cause katex-latex to stop working.');
+    throw new Error('Could not find showdown library.');
   }
 }(function (showdown) {
+
+  /**
+   * @param {NodeList} elements
+   * @param {boolean} ascii
+   */
+  function processEls(config, elements, ascii){
+    if(elements.length){
+      for (let i = 0, len = elements.length; i < len; i++) {
+        const element = elements[i];
+        const tex = ascii ? AMTparseAMtoTeX( element.innerHTML ) : element.innerHTML;
+        const html = katex.renderToString( tex, config );
+        element.parentNode.outerHTML = `<span class="katex-latex">${html}</span>`;
+      }
+    }
+  }
+
   // is katex.config is undefined, it is an empty object
   window.katex.config = window.katex.config || {};
 
@@ -46,40 +53,29 @@
         }, window.katex.config);
 
         //adds some styling to the math
-        if( !$('#katex-latex-styles').length ){
-          $('head').append(
-            '<style id="katex-latex-styles" type="text/css">'+
-            '.katex-latex { font-size: 20px; }'+
-            '</style>'
-          );
+        if( !document.getElementById('katex-latex-styles') ){
+          const styles = document.createElement('style');
+          styles.id = 'katex-latex-styles';
+          styles.innerHTML = '.katex-latex { font-size: 20px; }';
+          document.head.appendChild(styles);
         }
 
         //parse html inside a <div>
-        var $div = $('<div></div>').html(html);
+        const div = document.createElement('div');
+        div.innerHTML = html;
 
         //find our "code"
-        var $latex = $('code.latex.language-latex', $div);
-        var $asciimath = $('code.asciimath.language-asciimath', $div);
+        const latex = div.querySelectorAll('code.latex.language-latex');
+        const asciimath = div.querySelectorAll('code.asciimath.language-asciimath');
 
-        function processEls($elements, ascii){
-          if($elements.length){
-            return $elements.unwrap().each(function(i, e){
-              var $el = $( e );
-              var tex = ascii ? AMTparseAMtoTeX( $el.html() ) : $el.html();
-              var html = katex.renderToString( tex, config );
-              $el.replaceWith( '<span class="katex-latex">' + html + '</span>' );
-            });
-          }
-        }
-
-        processEls($latex);
-        processEls($asciimath, true);
+        processEls(config, latex);
+        processEls(config, asciimath, true);
         if( typeof renderMathInElement !== 'undefined' ){
-          renderMathInElement($div[0], config);
+          renderMathInElement(div, config);
         }
 
         //return html without the initial <div>
-        return $div.html();
+        return div.innerHTML;
       }
     }];
   });

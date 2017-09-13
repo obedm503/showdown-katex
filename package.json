@@ -24,7 +24,6 @@
     "url": "https://github.com/obedm503/katex-latex.git"
   },
   "dependencies": {
-    "jquery": "^3.1.0",
     "katex": "^0.8.3",
     "showdown": "^1.4.3"
   },

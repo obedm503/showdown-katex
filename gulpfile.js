@@ -47,7 +47,6 @@ gulp.task('build', function(){
     .pipe(gulp.dest('./dist/'));
 
   var min = queue({ objectMode: true }, asciiMin, es5Min)
-    // .add()
     .pipe(concat('katex-latex.min.js', { newLine: '\n\n' }))
     .pipe(gulp.dest('./dist/'));
 
