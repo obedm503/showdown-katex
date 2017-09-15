@@ -17,9 +17,10 @@ function renderElements(elements, config, isAsciimath) {
   if (elements.length) {
     for (let i = 0, len = elements.length; i < len; i++) {
       const element = elements[i];
-      const latex = isAsciimath ? asciimathToTex(element.innerHTML) : element.innerHTML;
+      const input = element.innerHTML;
+      const latex = isAsciimath ? asciimathToTex(input) : input;
       const html = window.katex.renderToString(latex, config);
-      element.parentNode.outerHTML = `<span class="katex-latex">${html}</span>`;
+      element.parentNode.outerHTML = `<span title="${input}">${html}</span>`;
     }
   }
 }
@@ -43,14 +44,6 @@ const katexLatex = () => {
           throwOnError: false, //fail silently
           errorColor: '#ff0000',
         };
-
-        //adds some styling to the math
-        if (!document.getElementById('katex-latex-styles')) {
-          const styles = document.createElement('style');
-          styles.id = 'katex-latex-styles';
-          styles.innerHTML = '.katex-latex { font-size: 20px; }';
-          document.head.appendChild(styles);
-        }
 
         //parse html inside a <div>
         const div = document.createElement('div');

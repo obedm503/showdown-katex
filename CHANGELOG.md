@@ -9,17 +9,17 @@
 
 #### FIX
 - add inline latex examples
-- move `window.katex.config` to `window.katexLatex.config`?s
+- move `window.katex.config` to `window.katexLatex.config`?
 
 ### 0.3.0
 #### NEW
-- `katex.config` object used to configure katex displayMode, errorColor, and throwOnError
 - moved from gulp to npm scripts and rollup based build system
 - moved `dist/ASCIIMathTeXImg.js` to `src/asciimath-to-tex.js`, adopting it into the source of the project
 - treeshaking the extra functions in `asciimath-to-tex.js`
 - moved to es6 thanks to babel and rollup
 - added katex auto-render extension integration. it is not bundled along with katex-latex. so there is inline latex support now!
 - exports showdown extension function as default and defines `window.katexLatex` function
+- show source expression on hover as the `<span>`'s `title`
 
 #### FIXED
 - wrapping `<div>` was substituted with a `<span>` to allow for flexibility
