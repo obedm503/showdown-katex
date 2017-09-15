@@ -1,5 +1,12 @@
 {
   "parserOptions": {
-  	"ecmaVersion": 6
-  }
+    "ecmaVersion": 2017,
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": "eslint:recommended",
+  "parser": "babel-eslint"
 }

@@ -5,7 +5,7 @@
 
 Showdown extension to display math using [KaTeX](https://khan.github.io/KaTeX/) and [LaTeX](https://www.latex-project.org/) or [AsciiMath](http://asciimath.org/)
 
-Special characters do not need escaping. katex-latex currently depends on jquery, but is intended to become independent.
+Special characters do not need escaping. katex-latex is no longer dependent on jQuery!
 
 > Works well alongside [bootmark](https://obedm503.github.io/bootmark/)
 
