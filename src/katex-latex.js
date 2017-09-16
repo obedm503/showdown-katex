@@ -25,26 +25,57 @@ function renderElements(elements, config, isAsciimath) {
   }
 }
 
+/**
+ * https://stackoverflow.com/questions/3446170/escape-string-for-use-in-javascript-regex
+ * @param {string} str
+ * @returns {string} regexp escaped string
+ */
+function escapeRegExp(str) {
+  // eslint-disable-next-line no-useless-escape
+  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+}
+
+// katex config
+const getConfig = () => ({
+  ...window.katex.config,
+  displayMode: true,
+  throwOnError: false, //fail silently
+  errorColor: '#ff0000',
+  delimiters: (window.katex.config.delimiters || []).concat([
+    { left: "$$", right: "$$", display: true },
+    { left: "\\[", right: "\\]", display: true },
+    { left: "\\(", right: "\\)", display: false },
+    { left: '~', right: '~', display: false, asciimath: true },
+    { left: '&&', right: '&&', display: true, asciimath: true },
+  ]),
+});
+
 // is katex.config is undefined, it is an empty object
 window.katex.config = window.katex.config || {};
 
 const katexLatex = () => {
   return [
-    // {
-    //   type: 'lang',
-
-    // },
+    {
+      type: 'output',
+      filter: (text = '') => {
+        const config = getConfig();
+        const delimiters = config.delimiters.filter(item => item.asciimath);
+        if (!delimiters.length) { return text; }
+        return delimiters.reduce((acc, delimiter) => {
+          const test = new RegExp(
+            `${escapeRegExp(delimiter.left)}(.*?)${escapeRegExp(delimiter.right)}`,
+            'g',
+          );
+          return acc.replace(test, (match, capture) =>
+            `${delimiter.left}${asciimathToTex(capture)}${delimiter.right}`
+          );
+        }, text);
+      },
+    },
     {
       type: 'output',
       filter: html => {
-        // katex config
-        const config = {
-          ...window.katex.config,
-          displayMode: true,
-          throwOnError: false, //fail silently
-          errorColor: '#ff0000',
-        };
-
+        const config = getConfig();
         //parse html inside a <div>
         const div = document.createElement('div');
         div.innerHTML = html;

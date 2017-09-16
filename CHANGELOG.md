@@ -4,11 +4,11 @@
 
 ### Future
 #### NEW
-- add inline asciimath support
 - rename to showdown-katex?
 
 #### FIX
 - add inline latex examples
+- add inline asciimath examples
 - move `window.katex.config` to `window.katexLatex.config`?
 
 ### 0.3.0
@@ -17,7 +17,7 @@
 - moved `dist/ASCIIMathTeXImg.js` to `src/asciimath-to-tex.js`, adopting it into the source of the project
 - treeshaking the extra functions in `asciimath-to-tex.js`
 - moved to es6 thanks to babel and rollup
-- added katex auto-render extension integration. it is not bundled along with katex-latex. so there is inline latex support now!
+- added katex auto-render extension integration. it is not bundled along with katex-latex. so there is inline latex and asciimath support now!
 - exports showdown extension function as default and defines `window.katexLatex` function
 - show source expression on hover as the `<span>`'s `title`
 
