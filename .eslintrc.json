@@ -8,5 +8,8 @@
     "node": true
   },
   "extends": "eslint:recommended",
-  "parser": "babel-eslint"
+  "parser": "babel-eslint",
+  "rules": {
+    "prefer-const": "error"
+  }
 }

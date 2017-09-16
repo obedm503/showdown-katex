@@ -5,11 +5,11 @@
 ### Future
 #### NEW
 - rename to showdown-katex?
+- move `window.katex.config` to `window.showdownKatex.config`?
 
 #### FIX
 - add inline latex examples
 - add inline asciimath examples
-- move `window.katex.config` to `window.katexLatex.config`?
 
 ### 0.3.0
 #### NEW

@@ -21,9 +21,9 @@ These are the defaults:
   throwOnError: false, //allows katex to fail silently
   errorColor: '#ff0000',
   [
-    { left: "$$", right: "$$", display: true },
-    { left: "\\[", right: "\\]", display: true },
-    { left: "\\(", right: "\\)", display: false },
+    { left: "$$", right: "$$", display: true }, // katex default
+    { left: "\\[", right: "\\]", display: true }, // katex default
+    { left: "\\(", right: "\\)", display: false }, // katex default
     { left: '~', right: '~', display: false, asciimath: true },
     { left: '&&', right: '&&', display: true, asciimath: true },
   ],
