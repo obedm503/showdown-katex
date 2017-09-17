@@ -3,11 +3,13 @@
   "author": "obedm503",
   "homepage": "https://obedm503.github.io/katex-latex/",
   "description": "katex extension for latex and asciimath in showdown (markdown + math)",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "license": "MIT",
   "main": "./dist/katex-latex.js",
-  "module": "./dist/katex-latex.js",
   "jsnext:main": "./src/katex-latex.js",
+  "files": [
+    "./dist/"
+  ],
   "scripts": {
     "clean": "rm -rf dist/",
     "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build'",
@@ -22,15 +24,6 @@
     "require": "babel-register",
     "babel": "inherit"
   },
-  "npmName": "katex-latex",
-  "npmFileMap": [
-    {
-      "basePath": "dist",
-      "files": [
-        "*"
-      ]
-    }
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/obedm503/katex-latex.git"

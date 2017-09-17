@@ -11,6 +11,11 @@
 - add inline latex examples
 - add inline asciimath examples
 
+### 0.3.1 2017-09-17
+#### FIXED
+- publish to unpkg
+- remove from bower
+
 ### 0.3.0 2017-09-16
 #### MIGRATION
 - there is no longer a version without the asciimath to tex script, so there is no `katex-latex.bundle.js`. just include `katex-latex.js` or `katex-latex.min.js`.
