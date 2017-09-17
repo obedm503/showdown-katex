@@ -3,7 +3,6 @@
 * @author [obedm503](https://github.com/obedm503/)
 * @git [git repo](https://github.com/obedm503/katex-latex.git)
 * @examples https://obedm503.github.io/katex-latex/
-* @version 0.2.0
 * @license MIT
 */
 import asciimathToTex from './asciimath-to-tex';

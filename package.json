@@ -3,7 +3,7 @@
   "author": "obedm503",
   "homepage": "https://obedm503.github.io/katex-latex/",
   "description": "katex extension for latex and asciimath in showdown (markdown + math)",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "license": "MIT",
   "main": "./dist/katex-latex.js",
   "module": "./dist/katex-latex.js",
@@ -14,7 +14,7 @@
     "build:umd": "BABEL_ENV=build rollup -c",
     "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
     "build": "npm run build:umd && npm run build:umd:min",
-    "prebublishOnly": "npm run clean && npm run build",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose",
     "lint": "eslint ."
   },

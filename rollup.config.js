@@ -16,9 +16,12 @@ const config = {
   ],
 };
 
-if(process.env.MIN === 'true'){
+if (process.env.MIN === 'true') {
   config.output.file = './dist/katex-latex.min.js';
   config.plugins.push(uglify({
+    output: {
+      comments: /^!|@preserve|@license|@cc_on/i
+    },
     compress: {
       pure_getters: true,
       unsafe: true,
