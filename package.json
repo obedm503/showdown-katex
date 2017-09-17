@@ -8,7 +8,7 @@
   "main": "./dist/katex-latex.js",
   "jsnext:main": "./src/katex-latex.js",
   "files": [
-    "./dist/"
+    "dist"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
@@ -20,6 +20,16 @@
     "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose",
     "lint": "eslint ."
   },
+  "npmName": "katex-latex",
+  "npmFileMap": [
+    {
+      "basePath": "./dist/",
+      "files": [
+        "*.js",
+        "*.js.map"
+      ]
+    }
+  ],
   "ava": {
     "require": "babel-register",
     "babel": "inherit"
