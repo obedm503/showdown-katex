@@ -896,7 +896,6 @@ function asciimathToTex(str) {
   return AMTparseExpr(str.replace(/^\s+/g, ''), false)[0];
 }
 
-window.asciimathToTex = asciimathToTex;
 export default asciimathToTex;
 
 // function AMparseMath(str) {

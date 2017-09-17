@@ -11,10 +11,16 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build'",
-    "build:umd": "rollup -c",
-    "build:umd:min": "rollup -c --environment MIN",
-    "build": "npm run build:umd & npm run build:umd:min",
-    "prebublishOnly": "npm run clean && npm run build"
+    "build:umd": "BABEL_ENV=build rollup -c",
+    "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
+    "build": "npm run build:umd && npm run build:umd:min",
+    "prebublishOnly": "npm run clean && npm run build",
+    "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose",
+    "lint": "eslint ."
+  },
+  "ava": {
+    "require": "babel-register",
+    "babel": "inherit"
   },
   "npmName": "katex-latex",
   "npmFileMap": [
@@ -36,12 +42,14 @@
     "showdown": "^1.4.3"
   },
   "devDependencies": {
+    "ava": "^0.22.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.0",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-latest": "^6.24.1",
+    "babel-register": "^6.26.0",
     "eslint": "^4.6.1",
     "http-server": "^0.10.0",
     "nodemon": "^1.12.0",
