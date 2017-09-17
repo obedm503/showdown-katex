@@ -3,7 +3,7 @@
   "author": "obedm503",
   "homepage": "https://obedm503.github.io/katex-latex/",
   "description": "katex extension for latex and asciimath in showdown (markdown + math)",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "license": "MIT",
   "main": "./dist/katex-latex.js",
   "jsnext:main": "./src/katex-latex.js",
