@@ -1,5 +1,5 @@
 /**!
-Based on ASCIIMathTeXImg.js but now part of https://github.com/obedm503/katex-latex
+Based on ASCIIMathTeXImg.js but now part of https://github.com/obedm503/showdown-katex
 
 Based on ASCIIMathML, Version 1.4.7 Aug 30, 2005, (c) Peter Jipsen http://www.chapman.edu/~jipsen
 Modified with TeX conversion for IMG rendering Sept 6, 2006 (c) David Lippman http://www.pierce.ctc.edu/dlippman

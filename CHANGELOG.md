@@ -1,16 +1,20 @@
-## katex-latex changelog
+## showdown-katex changelog
 
 > markdown + ( latex and/or asciimath )
 
 ### Future
 #### NEW
-- rename to showdown-katex?
 - move `window.katex.config` to `window.showdownKatex.config`?
 
 #### FIX
 - add inline latex examples
 - add inline asciimath examples
+### 0.4.0 2017-11-27
+#### FIXED
+- rename to showdown-katex
 
+#### MIGRATION
+- update references to `katex-latex` in files and showdown extension and update to `showdown-katex`
 ### 0.3.1 2017-09-17
 #### FIXED
 - publish to unpkg

@@ -4,9 +4,9 @@ import uglify from 'rollup-plugin-uglify';
 const config = {
   name: 'katexLatex',
   sourcemap: true,
-  input: './src/katex-latex.js',
+  input: './src/showdown-katex.js',
   output: {
-    file: './dist/katex-latex.js',
+    file: './dist/showdown-katex.js',
     format: 'umd',
   },
   plugins: [
@@ -17,7 +17,7 @@ const config = {
 };
 
 if (process.env.MIN === 'true') {
-  config.output.file = './dist/katex-latex.min.js';
+  config.output.file = './dist/showdown-katex.min.js';
   config.plugins.push(uglify({
     output: {
       comments: /^!|@preserve|@license|@cc_on/i

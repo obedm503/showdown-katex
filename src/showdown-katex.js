@@ -1,8 +1,8 @@
 /**!
-* @file katex-latex: markdown + ( latex and/or asciimath )
+* @file showdown-katex: markdown + ( latex and/or asciimath )
 * @author [obedm503](https://github.com/obedm503/)
-* @git [git repo](https://github.com/obedm503/katex-latex.git)
-* @examples https://obedm503.github.io/katex-latex/
+* @git [git repo](https://github.com/obedm503/showdown-katex.git)
+* @examples https://obedm503.github.io/showdown-katex/
 * @license MIT
 */
 import asciimathToTex from './asciimath-to-tex';
@@ -98,7 +98,7 @@ const katexLatex = () => {
 
 // register extension
 if (typeof window.showdown !== 'undefined') {
-  window.showdown.extension('katex-latex', katexLatex);
+  window.showdown.extension('showdown-katex', katexLatex);
 }
 
 export default katexLatex;

@@ -1,11 +1,11 @@
-[![Stories in Ready](https://badge.waffle.io/obedm503/katex-latex.png?label=ready&title=Ready)](https://waffle.io/obedm503/katex-latex)
-# katex-latex
+[![Stories in Ready](https://badge.waffle.io/obedm503/showdown-katex.png?label=ready&title=Ready)](https://waffle.io/obedm503/showdown-katex)
+# showdown-katex
 
-> https://obedm503.github.io/katex-latex/
+> https://obedm503.github.io/showdown-katex/
 
 Showdown extension to display math using [KaTeX](https://khan.github.io/KaTeX/) and [LaTeX](https://www.latex-project.org/) or [AsciiMath](http://asciimath.org/)
 
-Special characters do not need escaping. katex-latex is no longer dependent on jQuery!
+Special characters do not need escaping. showdown-katex is no longer dependent on jQuery!
 
 > Works well alongside [bootmark](https://obedm503.github.io/bootmark/)
 
@@ -77,6 +77,6 @@ in latex
 x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
 ```
 
-They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/katex-latex/).
+They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/showdown-katex/).
 
 ----

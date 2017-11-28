@@ -1,26 +1,26 @@
 {
-  "name": "katex-latex",
+  "name": "showdown-katex",
   "author": "obedm503",
-  "homepage": "https://obedm503.github.io/katex-latex/",
+  "homepage": "https://obedm503.github.io/showdown-katex/",
   "description": "katex extension for latex and asciimath in showdown (markdown + math)",
   "version": "0.3.2",
   "license": "MIT",
-  "main": "./dist/katex-latex.js",
-  "jsnext:main": "./src/katex-latex.js",
+  "main": "./dist/showdown-katex.js",
+  "jsnext:main": "./src/showdown-katex.js",
   "files": [
     "dist"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
-    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build'",
-    "build:umd": "BABEL_ENV=build rollup -c",
-    "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
-    "build": "npm run build:umd && npm run build:umd:min",
-    "prepublishOnly": "npm run clean && npm run build",
+    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run dist'",
+    "dist:umd": "BABEL_ENV=build rollup -c",
+    "dist:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
+    "dist": "npm run dist:umd && npm run dist:umd:min",
+    "prepublishOnly": "npm run clean && npm run dist",
     "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose",
     "lint": "eslint ."
   },
-  "npmName": "katex-latex",
+  "npmName": "showdown-katex",
   "npmFileMap": [
     {
       "basePath": "./dist/",
@@ -36,7 +36,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/obedm503/katex-latex.git"
+    "url": "https://github.com/obedm503/showdown-katex.git"
   },
   "dependencies": {
     "katex": "^0.8.3"
