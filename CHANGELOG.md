@@ -4,17 +4,33 @@
 
 ### Future
 #### NEW
-- move `window.katex.config` to `window.showdownKatex.config`?
-
 #### FIX
 - add inline latex examples
 - add inline asciimath examples
 ### 0.4.0 2017-11-27
-#### FIXED
+#### NEW
 - rename to showdown-katex
+- disallow global config
+- move `window.katexLatex` to `window.showdownKatex`
 
 #### MIGRATION
 - update references to `katex-latex` in files and showdown extension and update to `showdown-katex`
+- if previously using global config, it should now be passed to the global `showdownKatex` function which returns a showdown extension that can be passed as part of the `extensions` array
+
+        // before
+        window.katexLatex.config = {
+          throwOnError: true,
+        };
+        // now
+        const converter = new showdown.Converter({
+          extensions: [showdownKatex({
+            throwOnError: true,
+          })]
+        });
+        converter.makeHtml('~x=2~')
+
+  if not using custom config, just list `showdown-katex` in the extensions
+
 ### 0.3.1 2017-09-17
 #### FIXED
 - publish to unpkg

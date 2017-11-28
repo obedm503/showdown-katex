@@ -35,29 +35,26 @@ function escapeRegExp(str) {
 }
 
 // katex config
-const getConfig = () => ({
-  ...window.katex.config,
+const getConfig = (config = {}) => ({
   displayMode: true,
   throwOnError: false, //fail silently
   errorColor: '#ff0000',
-  delimiters: (window.katex.config.delimiters || []).concat([
+  ...config,
+  delimiters: ([
     { left: "$$", right: "$$", display: true },
     { left: "\\[", right: "\\]", display: true },
     { left: "\\(", right: "\\)", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
     { left: '&&', right: '&&', display: true, asciimath: true },
-  ]),
+  ]).concat(config.delimiters || []),
 });
 
-// is katex.config is undefined, it is an empty object
-window.katex.config = window.katex.config || {};
-
-const katexLatex = () => {
+const showdownKatex = (userConfig) => () => {
   return [
     {
       type: 'output',
       filter: (text = '') => {
-        const config = getConfig();
+        const config = getConfig(userConfig);
         const delimiters = config.delimiters.filter(item => item.asciimath);
         if (!delimiters.length) { return text; }
         return delimiters.reduce((acc, delimiter) => {
@@ -74,7 +71,7 @@ const katexLatex = () => {
     {
       type: 'output',
       filter: html => {
-        const config = getConfig();
+        const config = getConfig(userConfig);
         //parse html inside a <div>
         const div = document.createElement('div');
         div.innerHTML = html;
@@ -98,7 +95,7 @@ const katexLatex = () => {
 
 // register extension
 if (typeof window.showdown !== 'undefined') {
-  window.showdown.extension('showdown-katex', katexLatex);
+  window.showdown.extension('showdown-katex', showdownKatex());
 }
 
-export default katexLatex;
+export default showdownKatex;

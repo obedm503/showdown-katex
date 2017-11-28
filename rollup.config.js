@@ -2,7 +2,7 @@ import babel from 'rollup-plugin-babel';
 import uglify from 'rollup-plugin-uglify';
 
 const config = {
-  name: 'katexLatex',
+  name: 'showdownKatex',
   sourcemap: true,
   input: './src/showdown-katex.js',
   output: {
