@@ -28,18 +28,18 @@ THE SOFTWARE.
 //const AMTcgiloc = '';			//set to the URL of your LaTex renderer
 // const noMathRender = false;
 
-const config = {
-  translateOnLoad: false,		  //true to autotranslate
-  mathcolor: '',       	      // defaults to back, or specify any other color
-  displaystyle: true,         // puts limits above and below large operators
-  showasciiformulaonhover: true, // helps students learn ASCIIMath
-  decimalsign: '.',           // change to ',' if you like, beware of `(1,2)`!
-  AMdelimiter1: '`', AMescape1: '\\\\`', // can use other characters
-  AMusedelimiter2: false, 	  //whether to use second delimiter below
-  AMdelimiter2: '$', AMescape2: '\\\\\\$', AMdelimiter2regexp: '\\$',
-  AMdocumentId: 'wikitext',   // PmWiki element containing math (default=body)
-  doubleblankmathdelimiter: false // if true,  x+1  is equal to `x+1`
-};                                // for IE this works only in <!--   -->
+// const config = {
+//   translateOnLoad: false,		  //true to autotranslate
+//   mathcolor: '',       	      // defaults to back, or specify any other color
+//   displaystyle: true,         // puts limits above and below large operators
+//   showasciiformulaonhover: true, // helps students learn ASCIIMath
+//   decimalsign: '.',           // change to ',' if you like, beware of `(1,2)`!
+//   AMdelimiter1: '`', AMescape1: '\\\\`', // can use other characters
+//   AMusedelimiter2: false, 	  //whether to use second delimiter below
+//   AMdelimiter2: '$', AMescape2: '\\\\\\$', AMdelimiter2regexp: '\\$',
+//   AMdocumentId: 'wikitext',   // PmWiki element containing math (default=body)
+//   doubleblankmathdelimiter: false // if true,  x+1  is equal to `x+1`
+// };                                // for IE this works only in <!--   -->
 
 const CONST = 0, UNARY = 1, BINARY = 2, INFIX = 3, LEFTBRACKET = 4,
   RIGHTBRACKET = 5, SPACE = 6, UNDEROVER = 7, DEFINITION = 8,
@@ -327,47 +327,11 @@ const AMsymbols = [
   { input: 'mathfrak', tag: 'mstyle', atname: 'mathvariant', atval: 'fraktur', output: 'mathfrak', tex: null, ttype: UNARY }
 ];
 
-function compareNames(s1, s2) {
-  if (s1.input > s2.input) return 1
-  else return -1;
-}
-
 const AMnames = []; //list of input symbols
-
-function AMinitSymbols() {
-  let i;
-  const symlen = AMsymbols.length;
-  for (i = 0; i < symlen; i++) {
-    if (AMsymbols[i].tex && !(typeof AMsymbols[i].notexcopy == 'boolean' && AMsymbols[i].notexcopy)) {
-      AMsymbols.push({
-        input: AMsymbols[i].tex,
-        tag: AMsymbols[i].tag, output: AMsymbols[i].output, ttype: AMsymbols[i].ttype,
-        acc: (AMsymbols[i].acc || false)
-      });
-    }
-  }
-  refreshSymbols();
-}
-
-function refreshSymbols() {
-  let i;
-  AMsymbols.sort(compareNames);
-  for (i = 0; i < AMsymbols.length; i++) AMnames[i] = AMsymbols[i].input;
-}
-
-// function newcommand(oldstr, newstr) {
-//   AMsymbols.push({ input: oldstr, tag: 'mo', output: newstr, tex: null, ttype: DEFINITION });
-//   refreshSymbols();
-// }
-
-// function newsymbol(symbolobj) {
-//   AMsymbols.push(symbolobj);
-//   refreshSymbols();
-// }
 
 // yes
 // pure
-const AMremoveCharsAndBlanks = function(str, n) {
+function AMremoveCharsAndBlanks(str, n) {
   //remove n characters and any following blanks
   let st;
   if (str.charAt(n) == '\\' && str.charAt(n + 1) != '\\' && str.charAt(n + 1) != ' ')
@@ -380,31 +344,36 @@ const AMremoveCharsAndBlanks = function(str, n) {
 
 // yes
 // pure
-const AMposition = function(arr, str, n) {
-  // return position >=n where str appears or would be inserted
+function AMposition(arr, str, num) {
+  // return position >= num where str appears or would be inserted
   // assumes arr is sorted
-  if (n == 0) {
+  if (num == 0) {
     let h, m;
-    n = -1;
+    num = -1;
     h = arr.length;
-    while (n + 1 < h) {
-      m = (n + h) >> 1;
-      if (arr[m] < str) n = m; else h = m;
+    while (num + 1 < h) {
+      m = (num + h) >> 1;
+      if (arr[m] < str) {
+        num = m;
+      } else {
+        h = m;
+      }
     }
     return h;
   }
-  let i;
-  for (i = n; i < arr.length && arr[i] < str; i++);
-  return i; // i=arr.length || arr[i]>=str
+  for (let i = num; i < arr.length; i++) {
+    if (arr[i] >= str) {
+      return i; // i=arr.length || arr[i]>=str
+    }
+  }
 }
 
 // yes
-// AMposition
-const AMgetSymbol = function(str) {
+function AMgetSymbol(str) {
   //return maximal initial substring of str that appears in names
   //return null if there is none
-  let k = 0; //new pos
-  let j = 0; //old pos
+  let newI = 0; //new pos
+  let oldI = 0; //old pos
   let mk; // match pos
   let st;
   let tagst;
@@ -412,14 +381,14 @@ const AMgetSymbol = function(str) {
   let more = true;
   for (let i = 1; i <= str.length && more; i++) {
     st = str.slice(0, i); //initial substring of length i
-    j = k;
-    k = AMposition(AMnames, st, j);
-    if (k < AMnames.length && str.slice(0, AMnames[k].length) == AMnames[k]) {
-      match = AMnames[k];
-      mk = k;
+    oldI = newI;
+    newI = AMposition(AMnames, st, oldI);
+    if (newI < AMnames.length && str.slice(0, AMnames[newI].length) == AMnames[newI]) {
+      match = AMnames[newI];
+      mk = newI;
       i = match.length;
     }
-    more = k < AMnames.length && str.slice(0, AMnames[k].length) >= AMnames[k];
+    more = newI < AMnames.length && str.slice(0, AMnames[newI].length) >= AMnames[newI];
   }
   AMpreviousSymbol = AMcurrentSymbol;
   if (match != '') {
@@ -428,30 +397,30 @@ const AMgetSymbol = function(str) {
   }
   // if str[0] is a digit or - return maxsubstring of digits.digits
   AMcurrentSymbol = CONST;
-  k = 1;
+  newI = 1;
   st = str.slice(0, 1);
   let integ = true;
 
-  while ('0' <= st && st <= '9' && k <= str.length) {
-    st = str.slice(k, k + 1);
-    k++;
+  while ('0' <= st && st <= '9' && newI <= str.length) {
+    st = str.slice(newI, newI + 1);
+    newI++;
   }
-  if (st == config.decimalsign) {
-    st = str.slice(k, k + 1);
+  if (st == '.') {
+    st = str.slice(newI, newI + 1);
     if ('0' <= st && st <= '9') {
       integ = false;
-      k++;
-      while ('0' <= st && st <= '9' && k <= str.length) {
-        st = str.slice(k, k + 1);
-        k++;
+      newI++;
+      while ('0' <= st && st <= '9' && newI <= str.length) {
+        st = str.slice(newI, newI + 1);
+        newI++;
       }
     }
   }
-  if ((integ && k > 1) || k > 2) {
-    st = str.slice(0, k - 1);
+  if ((integ && newI > 1) || newI > 2) {
+    st = str.slice(0, newI - 1);
     tagst = 'mn';
   } else {
-    k = 2;
+    newI = 2;
     st = str.slice(0, 1); //take 1 character
     tagst = (('A' > st || st > 'Z') && ('a' > st || st > 'z') ? 'mo' : 'mi');
   }
@@ -886,7 +855,7 @@ function AMTparseExpr(str, rightbracket) {
   return [newFrag, str];
 }
 // yes
-function asciimathToTex(str) {
+export default function(str) {
   AMnestingDepth = 0;
   str = str.replace(/(&nbsp;|\u00a0|&#160;)/g, '');
   str = str.replace(/&gt;/g, '>');
@@ -897,189 +866,21 @@ function asciimathToTex(str) {
   return AMTparseExpr(str.replace(/^\s+/g, ''), false)[0];
 }
 
-export default asciimathToTex;
+{
+  for (let i = 0; i < AMsymbols.length; i++) {
+    if (AMsymbols[i].tex && AMsymbols[i].notexcopy === false) {
+      AMsymbols.push({
+        input: AMsymbols[i].tex,
+        tag: AMsymbols[i].tag,
+        output: AMsymbols[i].output,
+        ttype: AMsymbols[i].ttype,
+        acc: AMsymbols[i].acc || false
+      });
+    }
+  }
 
-// function AMparseMath(str) {
-//   //DLMOD to remove &nbsp;, which editor adds on multiple spaces
-//   str = str.replace(/(&nbsp;|\u00a0|&#160;)/g, '');
-//   str = str.replace(/&gt;/g, '>');
-//   str = str.replace(/&lt;/g, '<');
-//   if (str.match(/\S/) == null) {
-//     return document.createTextNode(' ');
-//   }
-//   const texstring = asciimathToTex(str);
-//   if (typeof mathbg != 'undefined' && mathbg == 'dark') {
-//     texstring = '\\reverse ' + texstring;
-//   }
-//   if (config.mathcolor != '') {
-//     texstring = '\\' + config.mathcolor + texstring;
-//   }
-//   if (config.displaystyle) {
-//     texstring = '\\displaystyle' + texstring;
-//   } else {
-//     texstring = '\\textstyle' + texstring;
-//   }
-//   texstring = texstring.replace('$', '\\$');
-
-//   const node = document.createElement('img');
-//   if (typeof encodeURIComponent == 'function') {
-//     texstring = encodeURIComponent(texstring);
-//   } else {
-//     texstring = escape(texstring);
-//   }
-//   node.src = AMTcgiloc + '?' + texstring;
-//   node.style.verticalAlign = 'middle';
-//   if (config.showasciiformulaonhover)                      //fixed by djhsu so newline
-//     node.setAttribute('title', str.replace(/\s+/g, ' '));//does not show in Gecko
-
-//   const snode = document.createElement('span');
-//   snode.appendChild(node); //chg
-//   return snode;
-// }
-
-//alias to align with wFallback function
-// function AMTparseMath(str) {
-//   return AMparseMath(str);
-// }
-
-// function AMstrarr2docFrag(arr, linebreaks) {
-//   const newFrag = document.createDocumentFragment();
-//   const expr = false;
-//   for (const i = 0; i < arr.length; i++) {
-//     if (expr) newFrag.appendChild(AMparseMath(arr[i]));
-//     else {
-//       const arri = (linebreaks ? arr[i].split('\n\n') : [arr[i]]);
-//       newFrag.appendChild(document.createElement('span').
-//         appendChild(document.createTextNode(arri[0])));
-//       for (const j = 1; j < arri.length; j++) {
-//         newFrag.appendChild(document.createElement('p'));
-//         newFrag.appendChild(document.createElement('span').
-//           appendChild(document.createTextNode(arri[j])));
-//       }
-//     }
-//     expr = !expr;
-//   }
-//   return newFrag;
-// }
-
-// function AMprocessNodeR(n, linebreaks) {
-//   const mtch, str, arr, frg, i;
-//   if (n.childNodes.length == 0) {
-//     if ((n.nodeType != 8 || linebreaks) &&
-//       n.parentNode.nodeName != 'form' && n.parentNode.nodeName != 'FORM' &&
-//       n.parentNode.nodeName != 'textarea' && n.parentNode.nodeName != 'TEXTAREA' &&
-//       n.parentNode.nodeName != 'pre' && n.parentNode.nodeName != 'PRE') {
-//       str = n.nodeValue;
-//       if (!(str == null)) {
-//         str = str.replace(/\r\n\r\n/g, '\n\n');
-//         if (config.doubleblankmathdelimiter) {
-//           str = str.replace(/\x20\x20\./g, ' ' + config.AMdelimiter1 + '.');
-//           str = str.replace(/\x20\x20,/g, ' ' + config.AMdelimiter1 + ',');
-//           str = str.replace(/\x20\x20/g, ' ' + config.AMdelimiter1 + ' ');
-//         }
-//         str = str.replace(/\x20+/g, ' ');
-//         str = str.replace(/\s*\r\n/g, ' ');
-//         mtch = false;
-//         if (config.AMusedelimiter2) {
-//           str = str.replace(new RegExp(config.AMescape2, 'g'),
-//             function(st) { mtch = true; return 'AMescape2' });
-//         }
-//         str = str.replace(new RegExp(config.AMescape1, 'g'),
-//           function(st) { mtch = true; return 'AMescape1' });
-//         if (config.AMusedelimiter2) str = str.replace(new RegExp(config.AMdelimiter2regexp, 'g'), config.AMdelimiter1);
-//         arr = str.split(config.AMdelimiter1);
-//         for (i = 0; i < arr.length; i++)
-//           if (config.AMusedelimiter2) {
-//             arr[i] = arr[i].replace(/AMescape2/g, config.AMdelimiter2).replace(/AMescape1/g, config.AMdelimiter1);
-//           } else {
-//             arr[i] = arr[i].replace(/AMescape1/g, config.AMdelimiter1);
-//           }
-//         if (arr.length > 1 || mtch) {
-
-//           frg = AMstrarr2docFrag(arr, n.nodeType == 8);
-//           const len = frg.childNodes.length;
-//           n.parentNode.replaceChild(frg, n);
-//           return len - 1;
-
-//         }
-//       }
-//     } else return 0;
-//   } else if (n.nodeName != 'math') { //should this change to img?
-//     for (i = 0; i < n.childNodes.length; i++)
-//       i += AMprocessNodeR(n.childNodes[i], linebreaks);
-//   }
-//   return 0;
-// }
-
-// function AMprocessNode(n, linebreaks, spanclassAM) {
-//   const frag, st;
-//   if (spanclassAM != null) {
-//     frag = document.getElementsByTagName('span');
-//     for (const i = 0; i < frag.length; i++)
-//       if (frag[i].className == 'AM')
-//         AMprocessNodeR(frag[i], linebreaks);
-//   } else {
-//     try {
-//       st = n.innerHTML;
-//     } catch (err) { }
-//     if (st == null ||
-//       st.indexOf(config.AMdelimiter1) != -1)// || st.indexOf(config.AMdelimiter2)!=-1)
-//       AMprocessNodeR(n, linebreaks);
-//   }
-// }
-
-// function translate(spanclassAM) {
-//   if (!AMtranslated) { // run this only once
-//     AMtranslated = true;
-//     const body = document.getElementsByTagName('body')[0];
-//     const processN = document.getElementById(config.AMdocumentId);
-//     AMprocessNode((processN != null ? processN : body), false, spanclassAM);
-//   }
-// }
-
-// const AMbody;
-// const AMtranslated = false;
-// const AMnoMathML = true;
-
-AMinitSymbols();
-
-// window.translate = translate;
-// window.AMTconfig = config;
-// window.AMprocessNode = AMprocessNode;
-// window.AMparseMath = AMparseMath;
-// window.AMTparseMath = AMparseMath;
-// window.asciimathToTex = asciimathToTex;
-
-// function generic() {
-//   if (config.translateOnLoad) {
-//     translate();
-//   }
-// }
-
-// //setup onload function
-// if (typeof window.addEventListener != 'undefined') {
-//   //.. gecko, safari, konqueror and standard
-//   window.addEventListener('load', generic, false);
-// } else if (typeof document.addEventListener != 'undefined') {
-//   //.. opera 7
-//   document.addEventListener('load', generic, false);
-// } else if (typeof window.attachEvent != 'undefined') {
-//   //.. win/ie
-//   window.attachEvent('onload', generic);
-// } else {
-//   //.. mac/ie5 and anything else that gets this far
-//   //if there's an existing onload function
-//   if (typeof window.onload == 'function') {
-//     //store it
-//     const existing = onload;
-//     //add new onload handler
-//     window.onload = function() {
-//       //call existing onload function
-//       existing();
-//       //call generic onload function
-//       generic();
-//     };
-//   } else {
-//     window.onload = generic;
-//   }
-// }
+  AMsymbols.sort((s1, s2) => s1.input > s2.input ? 1 : -1);
+  for (let i = 0; i < AMsymbols.length; i++) {
+    AMnames[i] = AMsymbols[i].input;
+  }
+}
