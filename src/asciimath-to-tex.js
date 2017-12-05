@@ -56,7 +56,7 @@ const AMsqrt = { input: 'sqrt', tag: 'msqrt', output: 'sqrt', tex: null, ttype: 
   AMmbox = { input: 'mbox', tag: 'mtext', output: 'mbox', tex: null, ttype: TEXT },
   AMquote = { input: '\'', tag: 'mtext', output: 'mbox', tex: null, ttype: TEXT };
 
-const AMsymbols = [
+let AMsymbols = [
   //some greek symbols
   { input: 'alpha', tag: 'mi', output: '\u03B1', tex: null, ttype: CONST },
   { input: 'beta', tag: 'mi', output: '\u03B2', tex: null, ttype: CONST },
@@ -327,7 +327,7 @@ const AMsymbols = [
   { input: 'mathfrak', tag: 'mstyle', atname: 'mathvariant', atval: 'fraktur', output: 'mathfrak', tex: null, ttype: UNARY }
 ];
 
-const AMnames = []; //list of input symbols
+let AMnames = []; //list of input symbols
 
 // yes
 // pure
@@ -374,7 +374,7 @@ function AMgetSymbol(str) {
   //return null if there is none
   let newI = 0; //new pos
   let oldI = 0; //old pos
-  let mk; // match pos
+  let matchI; // match pos
   let st;
   let tagst;
   let match = '';
@@ -385,18 +385,15 @@ function AMgetSymbol(str) {
     newI = AMposition(AMnames, st, oldI);
     if (newI < AMnames.length && str.slice(0, AMnames[newI].length) == AMnames[newI]) {
       match = AMnames[newI];
-      mk = newI;
+      matchI = newI;
       i = match.length;
     }
     more = newI < AMnames.length && str.slice(0, AMnames[newI].length) >= AMnames[newI];
   }
-  AMpreviousSymbol = AMcurrentSymbol;
   if (match != '') {
-    AMcurrentSymbol = AMsymbols[mk].ttype;
-    return AMsymbols[mk];
+    return AMsymbols[matchI];
   }
   // if str[0] is a digit or - return maxsubstring of digits.digits
-  AMcurrentSymbol = CONST;
   newI = 1;
   st = str.slice(0, 1);
   let integ = true;
@@ -424,10 +421,10 @@ function AMgetSymbol(str) {
     st = str.slice(0, 1); //take 1 character
     tagst = (('A' > st || st > 'Z') && ('a' > st || st > 'z') ? 'mo' : 'mi');
   }
-  if (st == '-' && AMpreviousSymbol == INFIX) {
-    AMcurrentSymbol = INFIX;
-    return { input: st, tag: tagst, output: st, ttype: UNARY, func: true, val: true };
-  }
+  // let AMpreviousSymbol;
+  // if (st == '-' && AMpreviousSymbol == INFIX) {
+  //   return { input: st, tag: tagst, output: st, ttype: UNARY, func: true, val: true };
+  // }
   return { input: st, tag: tagst, output: st, ttype: CONST, val: true }; //added val bit
 }
 
@@ -483,8 +480,6 @@ function AMTremoveBrackets(node) {
 */
 
 let AMnestingDepth;
-let AMpreviousSymbol;
-let AMcurrentSymbol;
 
 function AMTgetTeXsymbol(symb) {
   let pre;
@@ -855,11 +850,11 @@ function AMTparseExpr(str, rightbracket) {
   return [newFrag, str];
 }
 // yes
-export default function(str) {
+export default function(input) {
   AMnestingDepth = 0;
-  str = str.replace(/(&nbsp;|\u00a0|&#160;)/g, '');
-  str = str.replace(/&gt;/g, '>');
-  str = str.replace(/&lt;/g, '<');
+  const str = input.replace(/(&nbsp;|\u00a0|&#160;)/g, '')
+    .replace(/&gt;/g, '>')
+    .replace(/&lt;/g, '<');
   if (str.match(/\S/) == null) {
     return '';
   }
@@ -867,20 +862,13 @@ export default function(str) {
 }
 
 {
-  for (let i = 0; i < AMsymbols.length; i++) {
-    if (AMsymbols[i].tex && AMsymbols[i].notexcopy === false) {
-      AMsymbols.push({
-        input: AMsymbols[i].tex,
-        tag: AMsymbols[i].tag,
-        output: AMsymbols[i].output,
-        ttype: AMsymbols[i].ttype,
-        acc: AMsymbols[i].acc || false
-      });
-    }
-  }
+  const extraSymbols = AMsymbols
+    .filter(item => item.tex && item.notexcopy !== true)
+    .map(item => Object.assign({}, item, {
+      acc: item.acc || false
+    }));
+  AMsymbols = AMsymbols.concat(extraSymbols)
 
   AMsymbols.sort((s1, s2) => s1.input > s2.input ? 1 : -1);
-  for (let i = 0; i < AMsymbols.length; i++) {
-    AMnames[i] = AMsymbols[i].input;
-  }
+  AMnames = AMsymbols.map(item => item.input);
 }
