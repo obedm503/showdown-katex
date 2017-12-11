@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "clean": "rm -rf dist/",
-    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run dist'",
+    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run dist:umd'",
     "dist:umd": "BABEL_ENV=build rollup -c",
     "dist:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
     "dist": "npm run dist:umd && npm run dist:umd:min",
