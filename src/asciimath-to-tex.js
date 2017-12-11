@@ -43,7 +43,7 @@ const tokens = {
 const quoteSymbol = { input: '\'', tag: 'mtext', output: 'mbox', tex: null, ttype: tokens.TEXT };
 
 const symbols = [
-  //some greek symbols
+  // some greek symbols
   { input: 'alpha', tag: 'mi', output: '\u03B1', tex: null, ttype: tokens.CONST },
   { input: 'beta', tag: 'mi', output: '\u03B2', tex: null, ttype: tokens.CONST },
   { input: 'chi', tag: 'mi', output: '\u03C7', tex: null, ttype: tokens.CONST },
@@ -83,11 +83,11 @@ const symbols = [
   { input: 'Xi', tag: 'mo', output: '\u039E', tex: null, ttype: tokens.CONST },
   { input: 'zeta', tag: 'mi', output: '\u03B6', tex: null, ttype: tokens.CONST },
 
-  //binary operation symbols
+  // binary operation symbols
   { input: '*', tag: 'mo', output: '\u22C5', tex: 'cdot', ttype: tokens.CONST },
   { input: '**', tag: 'mo', output: '\u2217', tex: 'ast', ttype: tokens.CONST },
   { input: '***', tag: 'mo', output: '\u22C6', tex: 'star', ttype: tokens.CONST },
-  { input: '//', tag: 'mo', output: '/', tex: '/', ttype: tokens.CONST, val: true, notexcopy: true },
+  { input: '// ', tag: 'mo', output: '/', tex: '/', ttype: tokens.CONST, val: true, notexcopy: true },
   { input: '\\\\', tag: 'mo', output: '\\', tex: 'backslash', ttype: tokens.CONST },
   { input: 'setminus', tag: 'mo', output: '\\', tex: null, ttype: tokens.CONST },
   { input: 'xx', tag: 'mo', output: '\u00D7', tex: 'times', ttype: tokens.CONST },
@@ -113,7 +113,7 @@ const symbols = [
   { input: 'overset', tag: 'mover', output: 'stackrel', tex: null, ttype: tokens.BINARY },
   { input: 'underset', tag: 'munder', output: 'stackrel', tex: null, ttype: tokens.BINARY },
 
-  //binary relation symbols
+  // binary relation symbols
   { input: '!=', tag: 'mo', output: '\u2260', tex: 'ne', ttype: tokens.CONST },
   { input: ':=', tag: 'mo', output: ':=', tex: null, ttype: tokens.CONST },
   { input: 'lt', tag: 'mo', output: '<', tex: null, ttype: tokens.CONST },
@@ -134,12 +134,12 @@ const symbols = [
   { input: 'sube', tag: 'mo', output: '\u2286', tex: 'subseteq', ttype: tokens.CONST },
   { input: 'supe', tag: 'mo', output: '\u2287', tex: 'supseteq', ttype: tokens.CONST },
   { input: '-=', tag: 'mo', output: '\u2261', tex: 'equiv', ttype: tokens.CONST },
-  { input: '~=', tag: 'mo', output: '\u2245', tex: 'stackrel{\\sim}{=}', ttype: tokens.CONST }, //back hack b/c mimetex doesn't support /cong
+  { input: '~=', tag: 'mo', output: '\u2245', tex: 'stackrel{\\sim}{=}', ttype: tokens.CONST }, // back hack b/c mimetex doesn't support /cong
   { input: 'cong', tag: 'mo', output: '~=', tex: null, ttype: tokens.DEFINITION },
   { input: '~~', tag: 'mo', output: '\u2248', tex: 'approx', ttype: tokens.CONST },
   { input: 'prop', tag: 'mo', output: '\u221D', tex: 'propto', ttype: tokens.CONST },
 
-  //logical symbols
+  // logical symbols
   { input: 'and', tag: 'mtext', output: 'and', tex: null, ttype: tokens.SPACE },
   { input: 'or', tag: 'mtext', output: 'or', tex: null, ttype: tokens.SPACE },
   { input: 'not', tag: 'mo', output: '\u00AC', tex: 'neg', ttype: tokens.CONST },
@@ -153,9 +153,9 @@ const symbols = [
   { input: '_|_', tag: 'mo', output: '\u22A5', tex: 'bot', ttype: tokens.CONST },
   { input: 'TT', tag: 'mo', output: '\u22A4', tex: 'top', ttype: tokens.CONST },
   { input: '|--', tag: 'mo', output: '\u22A2', tex: 'vdash', ttype: tokens.CONST },
-  { input: '|==', tag: 'mo', output: '\u22A8', tex: 'models', ttype: tokens.CONST }, //mimetex doesn't support
+  { input: '|==', tag: 'mo', output: '\u22A8', tex: 'models', ttype: tokens.CONST }, // mimetex doesn't support
 
-  //grouping brackets
+  // grouping brackets
   { input: '(', tag: 'mo', output: '(', tex: null, ttype: tokens.LEFTBRACKET, val: true },
   { input: ')', tag: 'mo', output: ')', tex: null, ttype: tokens.RIGHTBRACKET, val: true },
   { input: '[', tag: 'mo', output: '[', tex: null, ttype: tokens.LEFTBRACKET, val: true },
@@ -163,7 +163,7 @@ const symbols = [
   { input: '{', tag: 'mo', output: '{', tex: 'lbrace', ttype: tokens.LEFTBRACKET },
   { input: '}', tag: 'mo', output: '}', tex: 'rbrace', ttype: tokens.RIGHTBRACKET },
   { input: '|', tag: 'mo', output: '|', tex: null, ttype: tokens.LEFTRIGHT, val: true },
-  //{input:'||', tag:'mo', output:'||', tex:null, ttype:LEFTRIGHT},
+  // {input:'||', tag:'mo', output:'||', tex:null, ttype:LEFTRIGHT},
   { input: '(:', tag: 'mo', output: '\u2329', tex: 'langle', ttype: tokens.LEFTBRACKET },
   { input: ':)', tag: 'mo', output: '\u232A', tex: 'rangle', ttype: tokens.RIGHTBRACKET },
   { input: '<<', tag: 'mo', output: '\u2329', tex: 'langle', ttype: tokens.LEFTBRACKET },
@@ -171,7 +171,7 @@ const symbols = [
   { input: '{:', tag: 'mo', output: '{:', tex: null, ttype: tokens.LEFTBRACKET, invisible: true },
   { input: ':}', tag: 'mo', output: ':}', tex: null, ttype: tokens.RIGHTBRACKET, invisible: true },
 
-  //miscellaneous symbols
+  // miscellaneous symbols
   { input: 'int', tag: 'mo', output: '\u222B', tex: null, ttype: tokens.CONST },
   { input: 'dx', tag: 'mi', output: '{:d x:}', tex: null, ttype: tokens.DEFINITION },
   { input: 'dy', tag: 'mi', output: '{:d y:}', tex: null, ttype: tokens.DEFINITION },
@@ -217,7 +217,7 @@ const symbols = [
   { input: '\'\'\'\'', tag: 'mo', output: '\'\'\'\'', tex: null, val: true },
 
 
-  //standard functions
+  // standard functions
   { input: 'lim', tag: 'mo', output: 'lim', tex: null, ttype: tokens.UNDEROVER },
   { input: 'Lim', tag: 'mo', output: 'Lim', tex: null, ttype: tokens.UNDEROVER },
   { input: 'sin', tag: 'mo', output: 'sin', tex: null, ttype: tokens.UNARY, func: true },
@@ -268,7 +268,7 @@ const symbols = [
   { input: 'min', tag: 'mo', output: 'min', tex: null, ttype: tokens.UNDEROVER },
   { input: 'max', tag: 'mo', output: 'max', tex: null, ttype: tokens.UNDEROVER },
 
-  //arrows
+  // arrows
   { input: 'uarr', tag: 'mo', output: '\u2191', tex: 'uparrow', ttype: tokens.CONST },
   { input: 'darr', tag: 'mo', output: '\u2193', tex: 'downarrow', ttype: tokens.CONST },
   { input: 'rarr', tag: 'mo', output: '\u2192', tex: 'rightarrow', ttype: tokens.CONST },
@@ -283,7 +283,7 @@ const symbols = [
   { input: 'lArr', tag: 'mo', output: '\u21D0', tex: 'Leftarrow', ttype: tokens.CONST },
   { input: 'hArr', tag: 'mo', output: '\u21D4', tex: 'Leftrightarrow', ttype: tokens.CONST },
 
-  //commands with argument
+  // commands with argument
   { input: 'sqrt', tag: 'msqrt', output: 'sqrt', tex: null, ttype: tokens.UNARY },
   { input: 'root', tag: 'mroot', output: 'root', tex: null, ttype: tokens.BINARY },
   { input: 'frac', tag: 'mfrac', output: '/', tex: null, ttype: tokens.BINARY },
@@ -344,7 +344,7 @@ function refreshSymbols() {
 // yes
 // pure
 function removeCharsAndBlanks(str, n) {
-  //remove n characters and any following blanks
+  // remove n characters and any following blanks
   let st;
   if (str.charAt(n) === '\\' && str.charAt(n + 1) !== '\\' && str.charAt(n + 1) !== ' ') {
     st = str.slice(n + 1);
@@ -383,17 +383,17 @@ function position(arr, str, n) {
 // yes
 // position
 function getSymbol(str) {
-  //return maximal initial substring of str that appears in names
-  //return null if there is none
-  let newPos = 0; //new pos
-  let oldPos = 0; //old pos
+  // return maximal initial substring of str that appears in names
+  // return null if there is none
+  let newPos = 0; // new pos
+  let oldPos = 0; // old pos
   let matchPos; // match pos
   let st;
   let tagst;
   let match = '';
   let more = true;
   for (let i = 1; i <= str.length && more; i++) {
-    st = str.slice(0, i); //initial substring of length i
+    st = str.slice(0, i); // initial substring of length i
     oldPos = newPos;
     newPos = position(inputSymbols, st, oldPos);
     if (newPos < inputSymbols.length && str.slice(0, inputSymbols[newPos].length) === inputSymbols[newPos]) {
@@ -434,14 +434,14 @@ function getSymbol(str) {
     tagst = 'mn';
   } else {
     newPos = 2;
-    st = str.slice(0, 1); //take 1 character
+    st = str.slice(0, 1); // take 1 character
     tagst = (('A' > st || st > 'Z') && ('a' > st || st > 'z') ? 'mo' : 'mi');
   }
   if (st === '-' && previousSymbol === tokens.INFIX) {
     currentSymbol = tokens.INFIX;
     return { input: st, tag: tagst, output: st, ttype: tokens.UNARY, func: true, val: true };
   }
-  return { input: st, tag: tagst, output: st, ttype: tokens.CONST, val: true }; //added val bit
+  return { input: st, tag: tagst, output: st, ttype: tokens.CONST, val: true }; // added val bit
 }
 
 function removeBrackets(node) {
@@ -468,7 +468,7 @@ function removeBrackets(node) {
       }
     }
     if (leftchop > 0) {
-      //st = node.charAt(node.length-7);
+      // st = node.charAt(node.length-7);
       st = node.substr(node.length - 8);
       if (st === '\\right)}' || st === '\\right]}' || st === '\\right.}') {
         node = '{' + node.substr(leftchop);
@@ -522,7 +522,7 @@ function getTeXsymbol(symb) {
 // parseExpr
 // removeBrackets
 // parseSexpr
-function parseSexpr(str) { //parses str and returns [node,tailstr]
+function parseSexpr(str) { // parses str and returns [node,tailstr]
   let symbol;
   let node;
   let result;
@@ -530,7 +530,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
   // const rightvert = false,
   let newFrag = '';
   str = removeCharsAndBlanks(str, 0);
-  symbol = getSymbol(str);             //either a token or a bracket or empty
+  symbol = getSymbol(str);             // either a token or a bracket or empty
   if (!symbol || symbol.ttype === tokens.RIGHTBRACKET && nestingDepth > 0) {
     return [null, str];
   }
@@ -549,7 +549,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
         return ['{' + texsymbol + '}', str];
       }
 
-    case tokens.LEFTBRACKET:   //read (expr+)
+    case tokens.LEFTBRACKET:   // read (expr+)
       nestingDepth++;
       str = removeCharsAndBlanks(str, symbol.input.length);
 
@@ -635,7 +635,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
       } else if (typeof symbol.rewriteleftright !== 'undefined') {  // abs, floor, ceil
         return ['{\\left' + symbol.rewriteleftright[0] + result[0] + '\\right' + symbol.rewriteleftright[1] + '}', result[1]];
       } else if (symbol.acc === true) {   // accent
-        //return ['{'+getTeXsymbol(symbol)+'{'+result[0]+'}}',result[1]];
+        // return ['{'+getTeXsymbol(symbol)+'{'+result[0]+'}}',result[1]];
         return [getTeXsymbol(symbol) + '{' + result[0] + '}', result[1]];
       } else {                        // font change command
         return ['{' + getTeXsymbol(symbol) + '{' + result[0] + '}}', result[1]];
@@ -674,7 +674,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
       nestingDepth--;
       var st = '';
       st = result[0].charAt(result[0].length - 1);
-      //alert(result[0].lastChild+'***'+st);
+      // alert(result[0].lastChild+'***'+st);
       if (st === '|') { // its an absolute value subterm
         node = '{\\left|' + result[0] + '}';
         return [node, result[1]];
@@ -684,7 +684,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
       }
 
     default:
-      //alert('default');
+      // alert('default');
       str = removeCharsAndBlanks(str, symbol.input.length);
       return ['{' + getTeXsymbol(symbol) + '}', str];
   }
@@ -732,8 +732,8 @@ function parseIexpr(str) {
       } else {
         node += '_{' + result[0] + '}';
       }
-    } else { //must be ^
-      //node = '{'+node+'}^{'+result[0]+'}';
+    } else { // must be ^
+      // node = '{'+node+'}^{'+result[0]+'}';
       node = node + '^{' + result[0] + '}';
     }
     if (typeof sym1.func !== 'undefined' && sym1.func) {
@@ -803,13 +803,13 @@ function parseExpr(str, rightbracket) {
   if (symbol.ttype === tokens.RIGHTBRACKET || symbol.ttype === tokens.LEFTRIGHT) {
     //    if (nestingDepth > 0) nestingDepth--;
     const len = newFrag.length;
-    if (len > 2 && newFrag.charAt(0) === '{' && newFrag.indexOf(',') > 0) { //could be matrix (total rewrite from .js)
+    if (len > 2 && newFrag.charAt(0) === '{' && newFrag.indexOf(',') > 0) { // could be matrix (total rewrite from .js)
       const right = newFrag.charAt(len - 2);
       if (right === ')' || right === ']') {
         const left = newFrag.charAt(6);
         if ((left === '(' && right === ')' && symbol.output !== '}') || (left === '[' && right === ']')) {
           let mxout = '\\matrix{';
-          const pos = new Array(); //position of commas
+          const pos = new Array(); // position of commas
           pos.push(0);
           let matrix = true;
           let mxnestingd = 0;
@@ -838,10 +838,10 @@ function parseExpr(str, rightbracket) {
             if (newFrag.charAt(i) === ',' && mxanynestingd === 1) {
               subpos[lastsubposstart].push(i);
             }
-            if (mxanynestingd < 0) {  //happens at the end of the row
-              if (lastsubposstart === i + 1) { //if at end of row, skip to next row
+            if (mxanynestingd < 0) {  // happens at the end of the row
+              if (lastsubposstart === i + 1) { // if at end of row, skip to next row
                 i++;
-              } else { //misformed something - abandon treating as a matrix
+              } else { // misformed something - abandon treating as a matrix
                 matrix = false;
               }
             }
@@ -856,7 +856,7 @@ function parseExpr(str, rightbracket) {
               }
               let subarr;
               if (i === 0) {
-                //subarr = newFrag.substr(pos[i]+7,pos[i+1]-pos[i]-15).split(',');
+                // subarr = newFrag.substr(pos[i]+7,pos[i+1]-pos[i]-15).split(',');
                 if (subpos[pos[i]].length === 1) {
                   subarr = [newFrag.substr(pos[i] + 7, pos[i + 1] - pos[i] - 15)];
                 } else {
@@ -867,7 +867,7 @@ function parseExpr(str, rightbracket) {
                   subarr.push(newFrag.substring(subpos[pos[i]][subpos[pos[i]].length - 1] + 1, pos[i + 1] - 8));
                 }
               } else {
-                //const subarr = newFrag.substr(pos[i]+8,pos[i+1]-pos[i]-16).split(',');
+                // const subarr = newFrag.substr(pos[i]+8,pos[i+1]-pos[i]-16).split(',');
                 if (subpos[pos[i]].length === 1) {
                   subarr = [newFrag.substr(pos[i] + 8, pos[i + 1] - pos[i] - 16)];
                 } else {
@@ -897,7 +897,7 @@ function parseExpr(str, rightbracket) {
 
     str = removeCharsAndBlanks(str, symbol.input.length);
     if (typeof symbol.invisible !== 'boolean' || !symbol.invisible) {
-      node = '\\right' + getTeXsymbol(symbol); //AMcreateMmlNode('mo',document.createTextNode(symbol.output));
+      node = '\\right' + getTeXsymbol(symbol); // AMcreateMmlNode('mo',document.createTextNode(symbol.output));
       newFrag += node;
       addedright = true;
     } else {
@@ -907,8 +907,8 @@ function parseExpr(str, rightbracket) {
 
   }
   if (nestingDepth > 0 && !addedright) {
-    newFrag += '\\right.'; //adjust for non-matching left brackets
-    //todo: adjust for non-matching right brackets
+    newFrag += '\\right.'; // adjust for non-matching left brackets
+    // todo: adjust for non-matching right brackets
   }
 
   return [newFrag, str];

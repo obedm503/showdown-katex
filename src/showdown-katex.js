@@ -37,7 +37,7 @@ function escapeRegExp(str) {
 // katex config
 const getConfig = (config = {}) => ({
   displayMode: true,
-  throwOnError: false, //fail silently
+  throwOnError: false, // fail silently
   errorColor: '#ff0000',
   ...config,
   delimiters: ([
@@ -56,7 +56,9 @@ const showdownKatex = (userConfig) => () => {
       filter: (text = '') => {
         const config = getConfig(userConfig);
         const delimiters = config.delimiters.filter(item => item.asciimath);
-        if (!delimiters.length) { return text; }
+        if (!delimiters.length) {
+          return text;
+        }
         return delimiters.reduce((acc, delimiter) => {
           const test = new RegExp(
             `${escapeRegExp(delimiter.left)}(.*?)${escapeRegExp(delimiter.right)}`,
@@ -72,11 +74,11 @@ const showdownKatex = (userConfig) => () => {
       type: 'output',
       filter: html => {
         const config = getConfig(userConfig);
-        //parse html inside a <div>
+        // parse html inside a <div>
         const div = document.createElement('div');
         div.innerHTML = html;
 
-        //find our "code"
+        // find our "code"
         const latex = div.querySelectorAll('code.latex.language-latex');
         const asciimath = div.querySelectorAll('code.asciimath.language-asciimath');
 
@@ -86,7 +88,7 @@ const showdownKatex = (userConfig) => () => {
           window.renderMathInElement(div, config);
         }
 
-        //return html without the initial <div>
+        // return html without the initial <div>
         return div.innerHTML;
       },
     },
