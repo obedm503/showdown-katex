@@ -11,6 +11,10 @@
   "parser": "babel-eslint",
   "rules": {
     "prefer-const": "error",
-    "eqeqeq": "error"
+    "eqeqeq": "error",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ]
   }
 }

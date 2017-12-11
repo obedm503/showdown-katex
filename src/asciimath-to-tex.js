@@ -37,7 +37,7 @@ const tokens = {
   UNDEROVER: 7,
   DEFINITION: 8,
   LEFTRIGHT: 9,
-  TEXT: 0
+  EXT: 10,
 };
 
 const quoteSymbol = { input: '\'', tag: 'mtext', output: 'mbox', tex: null, ttype: tokens.TEXT };
