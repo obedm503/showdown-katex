@@ -1,4 +1,4 @@
-/**!
+/** !
 * @file showdown-katex: markdown + ( latex and/or asciimath )
 * @author [obedm503](https://github.com/obedm503/)
 * @git [git repo](https://github.com/obedm503/showdown-katex.git)
@@ -19,7 +19,7 @@ function renderElements(elements, config, isAsciimath) {
       const input = element.innerHTML;
       const latex = isAsciimath ? asciimathToTex(input) : input;
       const html = window.katex.renderToString(latex, config);
-      element.parentNode.outerHTML = `<span title="${input}">${html}</span>`;
+      element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
     }
   }
 }
@@ -53,7 +53,7 @@ const showdownKatex = (userConfig) => () => {
   return [
     {
       type: 'output',
-      filter: (text = '') => {
+      filter(text = '') {
         const config = getConfig(userConfig);
         const delimiters = config.delimiters.filter(item => item.asciimath);
         if (!delimiters.length) {
@@ -61,18 +61,18 @@ const showdownKatex = (userConfig) => () => {
         }
         return delimiters.reduce((acc, delimiter) => {
           const test = new RegExp(
-            `${escapeRegExp(delimiter.left)}(.*?)${escapeRegExp(delimiter.right)}`,
+            `${ escapeRegExp(delimiter.left) }(.*?)${ escapeRegExp(delimiter.right) }`,
             'g',
           );
           return acc.replace(test, (match, capture) =>
-            `${delimiter.left}${asciimathToTex(capture)}${delimiter.right}`
+            `${ delimiter.left }${ asciimathToTex(capture) }${ delimiter.right }`
           );
         }, text);
       },
     },
     {
       type: 'output',
-      filter: html => {
+      filter(html) {
         const config = getConfig(userConfig);
         // parse html inside a <div>
         const div = document.createElement('div');

@@ -17,6 +17,12 @@
       "always-multiline"
     ],
     "brace-style": "error",
-    "curly": "error"
+    "curly": "error",
+    "prefer-template": "error",
+    "spaced-comment": "error",
+    "template-curly-spacing": [
+      "error",
+      "always"
+    ]
   }
 }

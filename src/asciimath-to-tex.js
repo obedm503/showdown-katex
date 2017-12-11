@@ -1,4 +1,4 @@
-/**!
+/** !
 Based on ASCIIMathTeXImg.js but now part of https://github.com/obedm503/showdown-katex
 
 Based on ASCIIMathML, Version 1.4.7 Aug 30, 2005, (c) Peter Jipsen http://www.chapman.edu/~jipsen
@@ -341,8 +341,6 @@ function refreshSymbols() {
 //   refreshSymbols();
 // }
 
-// yes
-// pure
 function removeCharsAndBlanks(str, n) {
   // remove n characters and any following blanks
   let st;
@@ -356,8 +354,6 @@ function removeCharsAndBlanks(str, n) {
   return st.slice(i);
 }
 
-// yes
-// pure
 function position(arr, str, n) {
   // return position >=n where str appears or would be inserted
   // assumes arr is sorted
@@ -380,8 +376,6 @@ function position(arr, str, n) {
   return i; // i=arr.length || arr[i]>=str
 }
 
-// yes
-// position
 function getSymbol(str) {
   // return maximal initial substring of str that appears in names
   // return null if there is none
@@ -471,11 +465,11 @@ function removeBrackets(node) {
       // st = node.charAt(node.length-7);
       st = node.substr(node.length - 8);
       if (st === '\\right)}' || st === '\\right]}' || st === '\\right.}') {
-        node = '{' + node.substr(leftchop);
-        node = node.substr(0, node.length - 8) + '}';
+        node = `{${ node.substr(leftchop) }`;
+        node = `${ node.substr(0, node.length - 8) }}`;
       } else if (st === '\\rbrace}') {
-        node = '{' + node.substr(leftchop);
-        node = node.substr(0, node.length - 14) + '}';
+        node = `{${ node.substr(leftchop) }`;
+        node = `${ node.substr(0, node.length - 14) }}`;
       }
     }
   }
@@ -515,13 +509,6 @@ function getTeXsymbol(symb) {
   }
 }
 
-// yes
-// removeCharsAndBlanks
-// getSymbol
-// getTeXsymbol
-// parseExpr
-// removeBrackets
-// parseSexpr
 function parseSexpr(str) { // parses str and returns [node,tailstr]
   let symbol;
   let node;
@@ -546,7 +533,7 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       if (texsymbol.charAt(0) === '\\' || symbol.tag === 'mo') {
         return [texsymbol, str];
       } else {
-        return ['{' + texsymbol + '}', str];
+        return [`{${ texsymbol }}`, str];
       }
 
     case tokens.LEFTBRACKET:   // read (expr+)
@@ -571,16 +558,16 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       }
       if (leftchop > 0) {
         result[0] = result[0].substr(leftchop);
-        if (symbol.invisible === true) {
-          node = '{' + result[0] + '}';
+        if (symbol.invisible) {
+          node = `{${ result[0] }}`;
         } else {
-          node = '{' + getTeXsymbol(symbol) + result[0] + '}';
+          node = `{${ getTeXsymbol(symbol) }${ result[0] }}`;
         }
       } else {
-        if (symbol.invisible === true) {
-          node = '{\\left.' + result[0] + '}';
+        if (symbol.invisible) {
+          node = `{\\left.${ result[0] }}`;
         } else {
-          node = '{\\left' + getTeXsymbol(symbol) + result[0] + '}';
+          node = `{\\left${ getTeXsymbol(symbol) }${ result[0] }}`;
         }
       }
       return [node, result[1]];
@@ -606,7 +593,7 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       if (st.charAt(0) === ' ') {
         newFrag = '\\ ';
       }
-      newFrag += '\\text{' + st + '}';
+      newFrag += `\\text{${ st }}`;
       if (st.charAt(st.length - 1) === ' ') {
         newFrag += '\\ ';
       }
@@ -616,48 +603,48 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       str = removeCharsAndBlanks(str, symbol.input.length);
       result = parseSexpr(str);
       if (result[0] === null) {
-        return ['{' + getTeXsymbol(symbol) + '}', str];
+        return [`{${ getTeXsymbol(symbol) }}`, str];
       }
       if (symbol.func === true) { // functions hack
         st = str.charAt(0);
         if (st === '^' || st === '_' || st === '/' || st === '|' || st === ',' || (symbol.input.length === 1 && symbol.input.match(/\w/) && st !== '(')) {
-          return ['{' + getTeXsymbol(symbol) + '}', str];
+          return [`{${ getTeXsymbol(symbol) }}`, str];
         } else {
-          node = '{' + getTeXsymbol(symbol) + '{' + result[0] + '}}';
+          node = `{${ getTeXsymbol(symbol) }{${ result[0] }}}`;
           return [node, result[1]];
         }
       }
       result[0] = removeBrackets(result[0]);
       if (symbol.input === 'sqrt') {           // sqrt
-        return ['\\sqrt{' + result[0] + '}', result[1]];
+        return [`\\sqrt{${ result[0] }}`, result[1]];
       } else if (symbol.input === 'cancel') {           // cancel
-        return ['\\cancel{' + result[0] + '}', result[1]];
+        return [`\\cancel{${ result[0] }}`, result[1]];
       } else if (typeof symbol.rewriteleftright !== 'undefined') {  // abs, floor, ceil
-        return ['{\\left' + symbol.rewriteleftright[0] + result[0] + '\\right' + symbol.rewriteleftright[1] + '}', result[1]];
+        return [`{\\left${ symbol.rewriteleftright[0] }${ result[0] }\\right${ symbol.rewriteleftright[1] }}`, result[1]];
       } else if (symbol.acc === true) {   // accent
         // return ['{'+getTeXsymbol(symbol)+'{'+result[0]+'}}',result[1]];
-        return [getTeXsymbol(symbol) + '{' + result[0] + '}', result[1]];
+        return [`${ getTeXsymbol(symbol) }{${ result[0] }}`, result[1]];
       } else {                        // font change command
-        return ['{' + getTeXsymbol(symbol) + '{' + result[0] + '}}', result[1]];
+        return [`{${ getTeXsymbol(symbol) }{${ result[0] }}}`, result[1]];
       }
     case tokens.BINARY:
       str = removeCharsAndBlanks(str, symbol.input.length);
       result = parseSexpr(str);
       if (result[0] === null) {
-        return ['{' + getTeXsymbol(symbol) + '}', str];
+        return [`{${ getTeXsymbol(symbol) }}`, str];
       }
       result[0] = removeBrackets(result[0]);
       var result2 = parseSexpr(result[1]);
       if (result2[0] === null) {
-        return ['{' + getTeXsymbol(symbol) + '}', str];
+        return [`{${ getTeXsymbol(symbol) }}`, str];
       }
       result2[0] = removeBrackets(result2[0]);
       if (symbol.input === 'color') {
-        newFrag = '{\\color{' + result[0].replace(/[{}]/g, '') + '}' + result2[0] + '}';
+        newFrag = `{\\color{${ result[0].replace(/[{}]/g, '') }}${ result2[0] }}`;
       } else if (symbol.input === 'root') {
-        newFrag = '{\\sqrt[' + result[0] + ']{' + result2[0] + '}}';
+        newFrag = `{\\sqrt[${ result[0] }]{${ result2[0] }}}`;
       } else {
-        newFrag = '{' + getTeXsymbol(symbol) + '{' + result[0] + '}{' + result2[0] + '}}';
+        newFrag = `{${ getTeXsymbol(symbol) }{${ result[0] }}{${ result2[0] }}}`;
       }
       return [newFrag, result2[1]];
     case tokens.INFIX:
@@ -665,7 +652,7 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       return [symbol.output, str];
     case tokens.SPACE:
       str = removeCharsAndBlanks(str, symbol.input.length);
-      return ['{\\quad\\text{' + symbol.input + '}\\quad}', str];
+      return [`{\\quad\\text{${ symbol.input }}\\quad}`, str];
     case tokens.LEFTRIGHT:
       //    if (rightvert) return [null,str]; else rightvert = true;
       nestingDepth++;
@@ -676,7 +663,7 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
       st = result[0].charAt(result[0].length - 1);
       // alert(result[0].lastChild+'***'+st);
       if (st === '|') { // its an absolute value subterm
-        node = '{\\left|' + result[0] + '}';
+        node = `{\\left|${ result[0] }}`;
         return [node, result[1]];
       } else { // the '|' is a \mid
         node = '{\\mid}';
@@ -686,16 +673,10 @@ function parseSexpr(str) { // parses str and returns [node,tailstr]
     default:
       // alert('default');
       str = removeCharsAndBlanks(str, symbol.input.length);
-      return ['{' + getTeXsymbol(symbol) + '}', str];
+      return [`{${ getTeXsymbol(symbol) }}`, str];
   }
 }
 
-// yes
-// removeCharsAndBlanks
-// getSymbol
-// parseSexpr
-// removeBrackets
-// parseIexpr
 function parseIexpr(str) {
   let sym2
   let node
@@ -725,22 +706,22 @@ function parseIexpr(str) {
         const res2 = parseSexpr(str);
         res2[0] = removeBrackets(res2[0]);
         str = res2[1];
-        node = '{' + node;
-        node += '_{' + result[0] + '}';
-        node += '^{' + res2[0] + '}';
+        node = `{${ node }`;
+        node += `_{${ result[0] }}`;
+        node += `^{${ res2[0] }}`;
         node += '}';
       } else {
-        node += '_{' + result[0] + '}';
+        node += `_{${ result[0] }}`;
       }
     } else { // must be ^
       // node = '{'+node+'}^{'+result[0]+'}';
-      node = node + '^{' + result[0] + '}';
+      node = `${ node }^{${ result[0] }}`;
     }
     if (typeof sym1.func !== 'undefined' && sym1.func) {
       sym2 = getSymbol(str);
       if (sym2.ttype !== tokens.INFIX && sym2.ttype !== tokens.RIGHTBRACKET) {
         result = parseIexpr(str);
-        node = '{' + node + result[0] + '}';
+        node = `{${ node }${ result[0] }}`;
         str = result[1];
       }
     }
@@ -749,12 +730,6 @@ function parseIexpr(str) {
   return [node, str];
 }
 
-// yes
-// removeCharsAndBlanks
-// parseIexpr
-// getSymbol
-// removeBrackets
-// getTeXsymbol
 function parseExpr(str, rightbracket) {
   let symbol;
   let node;
@@ -781,8 +756,8 @@ function parseExpr(str, rightbracket) {
       }
       str = result[1];
       node = removeBrackets(node);
-      node = '\\frac' + '{' + node + '}';
-      node += '{' + result[0] + '}';
+      node = `${ '\\frac' + '{' }${ node }}`;
+      node += `{${ result[0] }}`;
       newFrag += node;
       symbol = getSymbol(str);
     } else if (node) {
@@ -897,7 +872,7 @@ function parseExpr(str, rightbracket) {
 
     str = removeCharsAndBlanks(str, symbol.input.length);
     if (typeof symbol.invisible !== 'boolean' || !symbol.invisible) {
-      node = '\\right' + getTeXsymbol(symbol); // AMcreateMmlNode('mo',document.createTextNode(symbol.output));
+      node = `\\right${ getTeXsymbol(symbol) }`; // AMcreateMmlNode('mo',document.createTextNode(symbol.output));
       newFrag += node;
       addedright = true;
     } else {
@@ -913,7 +888,7 @@ function parseExpr(str, rightbracket) {
 
   return [newFrag, str];
 }
-// yes
+
 /** @param {string} str */
 export default function asciimathToTex(str) {
   nestingDepth = 0;
@@ -921,7 +896,7 @@ export default function asciimathToTex(str) {
     .replace(/(&nbsp;|\u00a0|&#160;)/g, '')
     .replace(/&gt;/g, '>')
     .replace(/&lt;/g, '<');
-  if (str.match(/\S/) === null) {
+  if (!str.match(/\S/)) {
     return '';
   }
   return parseExpr(str.replace(/^\s+/g, ''), false)[0];
