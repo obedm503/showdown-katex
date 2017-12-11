@@ -320,7 +320,7 @@ const symbols = [
   { input: 'tt', tag: 'mstyle', atname: 'mathvariant', atval: 'monospace', output: 'tt', tex: 'mathtt', ttype: tokens.UNARY, notexcopy: true },
   { input: 'mathtt', tag: 'mstyle', atname: 'mathvariant', atval: 'monospace', output: 'mathtt', tex: null, ttype: tokens.UNARY },
   { input: 'fr', tag: 'mstyle', atname: 'mathvariant', atval: 'fraktur', output: 'fr', tex: 'mathfrak', ttype: tokens.UNARY, notexcopy: true },
-  { input: 'mathfrak', tag: 'mstyle', atname: 'mathvariant', atval: 'fraktur', output: 'mathfrak', tex: null, ttype: tokens.UNARY }
+  { input: 'mathfrak', tag: 'mstyle', atname: 'mathvariant', atval: 'fraktur', output: 'mathfrak', tex: null, ttype: tokens.UNARY },
 ];
 
 
