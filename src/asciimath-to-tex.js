@@ -37,7 +37,7 @@ const tokens = {
   UNDEROVER: 7,
   DEFINITION: 8,
   LEFTRIGHT: 9,
-  EXT: 10,
+  TEXT: 10,
 };
 
 const quoteSymbol = { input: '\'', tag: 'mtext', output: 'mbox', tex: null, ttype: tokens.TEXT };
@@ -285,7 +285,7 @@ const symbols = [
 
   //commands with argument
   { input: 'sqrt', tag: 'msqrt', output: 'sqrt', tex: null, ttype: tokens.UNARY },
-  { input: 'root', tag: 'mroot', output: 'root', tex: null, ttype: tokens.tokens.BINARY },
+  { input: 'root', tag: 'mroot', output: 'root', tex: null, ttype: tokens.BINARY },
   { input: 'frac', tag: 'mfrac', output: '/', tex: null, ttype: tokens.BINARY },
   { input: '/', tag: 'mfrac', output: '/', tex: null, ttype: tokens.INFIX },
   { input: 'stackrel', tag: 'mover', output: 'stackrel', tex: null, ttype: tokens.BINARY },
@@ -324,13 +324,11 @@ const symbols = [
 ];
 
 
-const names = []; //list of input symbols
+let inputSymbols = [];
 
 function refreshSymbols() {
   symbols.sort((s1, s2) => (s1.input > s2.input) ? 1 : -1);
-  symbols.forEach((item, i) => {
-    names[i] = item.input;
-  });
+  inputSymbols = symbols.map(item => item.input);
 }
 
 // function newcommand(oldstr, newstr) {
@@ -345,91 +343,97 @@ function refreshSymbols() {
 
 // yes
 // pure
-const removeCharsAndBlanks = function(str, n) {
+function removeCharsAndBlanks(str, n) {
   //remove n characters and any following blanks
   let st;
-  if (str.charAt(n) === '\\' && str.charAt(n + 1) !== '\\' && str.charAt(n + 1) !== ' ')
+  if (str.charAt(n) === '\\' && str.charAt(n + 1) !== '\\' && str.charAt(n + 1) !== ' ') {
     st = str.slice(n + 1);
-  else st = str.slice(n);
+  } else {
+    st = str.slice(n);
+  }
   let i;
-  for (i = 0; i < st.length && st.charCodeAt(i) <= 32; i = i + 1);
+  for (i = 0; i < st.length && st.charCodeAt(i) <= 32; i++) {}
   return st.slice(i);
 }
 
 // yes
 // pure
-const position = function(arr, str, n) {
+function position(arr, str, n) {
   // return position >=n where str appears or would be inserted
   // assumes arr is sorted
   if (n === 0) {
-    let h, m;
+    let len = arr.length;
+    let m;
     n = -1;
-    h = arr.length;
-    while (n + 1 < h) {
-      m = (n + h) >> 1;
-      if (arr[m] < str) n = m; else h = m;
+    while (n + 1 < len) {
+      m = (n + len) >> 1;
+      if (arr[m] < str) {
+        n = m;
+      } else {
+        len = m;
+      }
     }
-    return h;
+    return len;
   }
   let i;
-  for (i = n; i < arr.length && arr[i] < str; i++);
+  for (i = n; i < arr.length && arr[i] < str; i++) {}
   return i; // i=arr.length || arr[i]>=str
 }
 
 // yes
 // position
-const getSymbol = function(str) {
+function getSymbol(str) {
   //return maximal initial substring of str that appears in names
   //return null if there is none
-  let k = 0; //new pos
-  let j = 0; //old pos
-  let mk; // match pos
+  let newPos = 0; //new pos
+  let oldPos = 0; //old pos
+  let matchPos; // match pos
   let st;
   let tagst;
   let match = '';
   let more = true;
   for (let i = 1; i <= str.length && more; i++) {
     st = str.slice(0, i); //initial substring of length i
-    j = k;
-    k = position(names, st, j);
-    if (k < names.length && str.slice(0, names[k].length) === names[k]) {
-      match = names[k];
-      mk = k;
+    oldPos = newPos;
+    newPos = position(inputSymbols, st, oldPos);
+    if (newPos < inputSymbols.length && str.slice(0, inputSymbols[newPos].length) === inputSymbols[newPos]) {
+      match = inputSymbols[newPos];
+      matchPos = newPos;
       i = match.length;
     }
-    more = k < names.length && str.slice(0, names[k].length) >= names[k];
+    more = newPos < inputSymbols.length && str.slice(0, inputSymbols[newPos].length) >= inputSymbols[newPos];
   }
   previousSymbol = currentSymbol;
   if (match !== '') {
-    currentSymbol = symbols[mk].ttype;
-    return symbols[mk];
+    currentSymbol = symbols[matchPos].ttype;
+    return symbols[matchPos];
   }
   // if str[0] is a digit or - return maxsubstring of digits.digits
   currentSymbol = tokens.CONST;
-  k = 1;
+  newPos = 1;
   st = str.slice(0, 1);
   let integ = true;
 
-  while ('0' <= st && st <= '9' && k <= str.length) {
-    st = str.slice(k, k + 1);
-    k++;
+  while ('0' <= st && st <= '9' && newPos <= str.length) {
+    st = str.slice(newPos, newPos + 1);
+    newPos++;
   }
   if (st === '.') {
-    st = str.slice(k, k + 1);
+    st = str.slice(newPos, newPos + 1);
     if ('0' <= st && st <= '9') {
       integ = false;
-      k++;
-      while ('0' <= st && st <= '9' && k <= str.length) {
-        st = str.slice(k, k + 1);
-        k++;
+      newPos++;
+      while ('0' <= st && st <= '9' && newPos <= str.length) {
+        st = str.slice(newPos, newPos + 1);
+        newPos++;
       }
     }
   }
-  if ((integ && k > 1) || k > 2) {
-    st = str.slice(0, k - 1);
+  if ((integ && newPos > 1) || newPos > 2) {
+    st = str.slice(0, newPos - 1);
     tagst = 'mn';
   } else {
-    k = 2;
+    newPos = 2;
     st = str.slice(0, 1); //take 1 character
     tagst = (('A' > st || st > 'Z') && ('a' > st || st > 'z') ? 'mo' : 'mi');
   }
@@ -502,9 +506,9 @@ function getTeXsymbol(symb) {
   } else {
     pre = '\\';
   }
-  if (symb.tex === null) {
-    //can't remember why this was here.  Breaks /delta /Delta to removed
-    //return (pre+(pre==''?symb.input:symb.input.toLowerCase()));
+  if (!symb.tex) {
+    // can't remember why this was here.  Breaks /delta /Delta to removed
+    // return (pre + (pre == '' ? symb.input : symb.input.toLowerCase()));
     return (pre + symb.input);
   } else {
     return (pre + symb.tex);
@@ -527,7 +531,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
   let newFrag = '';
   str = removeCharsAndBlanks(str, 0);
   symbol = getSymbol(str);             //either a token or a bracket or empty
-  if (symbol === null || symbol.ttype === tokens.RIGHTBRACKET && nestingDepth > 0) {
+  if (!symbol || symbol.ttype === tokens.RIGHTBRACKET && nestingDepth > 0) {
     return [null, str];
   }
   if (symbol.ttype === tokens.DEFINITION) {
@@ -539,8 +543,11 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
     case tokens.CONST:
       str = removeCharsAndBlanks(str, symbol.input.length);
       var texsymbol = getTeXsymbol(symbol);
-      if (texsymbol.charAt(0) === '\\' || symbol.tag === 'mo') return [texsymbol, str];
-      else return ['{' + texsymbol + '}', str];
+      if (texsymbol.charAt(0) === '\\' || symbol.tag === 'mo') {
+        return [texsymbol, str];
+      } else {
+        return ['{' + texsymbol + '}', str];
+      }
 
     case tokens.LEFTBRACKET:   //read (expr+)
       nestingDepth++;
@@ -564,27 +571,37 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
       }
       if (leftchop > 0) {
         result[0] = result[0].substr(leftchop);
-        if (typeof symbol.invisible === 'boolean' && symbol.invisible)
+        if (symbol.invisible === true) {
           node = '{' + result[0] + '}';
-        else {
+        } else {
           node = '{' + getTeXsymbol(symbol) + result[0] + '}';
         }
       } else {
-        if (typeof symbol.invisible === 'boolean' && symbol.invisible)
+        if (symbol.invisible === true) {
           node = '{\\left.' + result[0] + '}';
-        else {
+        } else {
           node = '{\\left' + getTeXsymbol(symbol) + result[0] + '}';
         }
       }
       return [node, result[1]];
     case tokens.TEXT:
-      if (symbol !== quoteSymbol) str = removeCharsAndBlanks(str, symbol.input.length);
-      if (str.charAt(0) === '{') i = str.indexOf('}');
-      else if (str.charAt(0) === '(') i = str.indexOf(')');
-      else if (str.charAt(0) === '[') i = str.indexOf(']');
-      else if (symbol === quoteSymbol) i = str.slice(1).indexOf('\'') + 1;
-      else i = 0;
-      if (i === -1) i = str.length;
+      if (symbol !== quoteSymbol) {
+        str = removeCharsAndBlanks(str, symbol.input.length);
+      }
+      if (str.charAt(0) === '{') {
+        i = str.indexOf('}');
+      } else if (str.charAt(0) === '(') {
+        i = str.indexOf(')');
+      } else if (str.charAt(0) === '[') {
+        i = str.indexOf(']');
+      } else if (symbol === quoteSymbol) {
+        i = str.slice(1).indexOf('\'') + 1;
+      } else {
+        i = 0;
+      }
+      if (i === -1) {
+        i = str.length;
+      }
       st = str.slice(1, i);
       if (st.charAt(0) === ' ') {
         newFrag = '\\ ';
@@ -598,8 +615,10 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
     case tokens.UNARY:
       str = removeCharsAndBlanks(str, symbol.input.length);
       result = parseSexpr(str);
-      if (result[0] === null) return ['{' + getTeXsymbol(symbol) + '}', str];
-      if (typeof symbol.func === 'boolean' && symbol.func) { // functions hack
+      if (result[0] === null) {
+        return ['{' + getTeXsymbol(symbol) + '}', str];
+      }
+      if (symbol.func === true) { // functions hack
         st = str.charAt(0);
         if (st === '^' || st === '_' || st === '/' || st === '|' || st === ',' || (symbol.input.length === 1 && symbol.input.match(/\w/) && st !== '(')) {
           return ['{' + getTeXsymbol(symbol) + '}', str];
@@ -615,7 +634,7 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
         return ['\\cancel{' + result[0] + '}', result[1]];
       } else if (typeof symbol.rewriteleftright !== 'undefined') {  // abs, floor, ceil
         return ['{\\left' + symbol.rewriteleftright[0] + result[0] + '\\right' + symbol.rewriteleftright[1] + '}', result[1]];
-      } else if (typeof symbol.acc === 'boolean' && symbol.acc) {   // accent
+      } else if (symbol.acc === true) {   // accent
         //return ['{'+getTeXsymbol(symbol)+'{'+result[0]+'}}',result[1]];
         return [getTeXsymbol(symbol) + '{' + result[0] + '}', result[1]];
       } else {                        // font change command
@@ -624,10 +643,14 @@ function parseSexpr(str) { //parses str and returns [node,tailstr]
     case tokens.BINARY:
       str = removeCharsAndBlanks(str, symbol.input.length);
       result = parseSexpr(str);
-      if (result[0] === null) return ['{' + getTeXsymbol(symbol) + '}', str];
+      if (result[0] === null) {
+        return ['{' + getTeXsymbol(symbol) + '}', str];
+      }
       result[0] = removeBrackets(result[0]);
       var result2 = parseSexpr(result[1]);
-      if (result2[0] === null) return ['{' + getTeXsymbol(symbol) + '}', str];
+      if (result2[0] === null) {
+        return ['{' + getTeXsymbol(symbol) + '}', str];
+      }
       result2[0] = removeBrackets(result2[0]);
       if (symbol.input === 'color') {
         newFrag = '{\\color{' + result[0].replace(/[{}]/g, '') + '}' + result2[0] + '}';
@@ -687,9 +710,12 @@ function parseIexpr(str) {
     str = removeCharsAndBlanks(str, symbol.input.length);
     // if (symbol.input === '/') result = parseIexpr(str); else
     result = parseSexpr(str);
-    if (result[0] === null) // show box in place of missing argument
+    // show box in place of missing argument
+    if (result[0] === null) {
       result[0] = '{}';
-    else result[0] = removeBrackets(result[0]);
+    } else {
+      result[0] = removeBrackets(result[0]);
+    }
     str = result[1];
     //    if (symbol.input === '/') removeBrackets(node);
     if (symbol.input === '_') {
@@ -747,16 +773,21 @@ function parseExpr(str, rightbracket) {
       str = removeCharsAndBlanks(str, symbol.input.length);
       result = parseIexpr(str);
 
-      if (result[0] === null) // show box in place of missing argument
+      // show box in place of missing argument
+      if (result[0] === null) {
         result[0] = '{}';
-      else result[0] = removeBrackets(result[0]);
+      } else {
+        result[0] = removeBrackets(result[0]);
+      }
       str = result[1];
       node = removeBrackets(node);
       node = '\\frac' + '{' + node + '}';
       node += '{' + result[0] + '}';
       newFrag += node;
       symbol = getSymbol(str);
-    } else if (node !== undefined) newFrag += node;
+    } else if (node) {
+      newFrag += node;
+    }
   } while (
     (
       symbol.ttype !== tokens.RIGHTBRACKET &&
@@ -766,8 +797,8 @@ function parseExpr(str, rightbracket) {
       ) ||
       nestingDepth === 0
     ) &&
-    symbol !== null &&
-    symbol.output !== ''
+    symbol &&
+    symbol.output
   );
   if (symbol.ttype === tokens.RIGHTBRACKET || symbol.ttype === tokens.LEFTRIGHT) {
     //    if (nestingDepth > 0) nestingDepth--;
@@ -787,7 +818,9 @@ function parseExpr(str, rightbracket) {
           let lastsubposstart = 0;
           let mxanynestingd = 0;
           for (i = 1; i < len - 1; i++) {
-            if (newFrag.charAt(i) === left) mxnestingd++;
+            if (newFrag.charAt(i) === left) {
+              mxnestingd++;
+            }
             if (newFrag.charAt(i) === right) {
               mxnestingd--;
               if (mxnestingd === 0 && newFrag.charAt(i + 2) === ',' && newFrag.charAt(i + 3) === '{') {
@@ -796,8 +829,12 @@ function parseExpr(str, rightbracket) {
                 subpos[lastsubposstart] = [i + 2];
               }
             }
-            if (newFrag.charAt(i) === '[' || newFrag.charAt(i) === '(' || newFrag.charAt(i) === '{') { mxanynestingd++; }
-            if (newFrag.charAt(i) === ']' || newFrag.charAt(i) === ')' || newFrag.charAt(i) === '}') { mxanynestingd--; }
+            if (newFrag.charAt(i) === '[' || newFrag.charAt(i) === '(' || newFrag.charAt(i) === '{') {
+              mxanynestingd++;
+            }
+            if (newFrag.charAt(i) === ']' || newFrag.charAt(i) === ')' || newFrag.charAt(i) === '}') {
+              mxanynestingd--;
+            }
             if (newFrag.charAt(i) === ',' && mxanynestingd === 1) {
               subpos[lastsubposstart].push(i);
             }
@@ -814,7 +851,9 @@ function parseExpr(str, rightbracket) {
           let lastmxsubcnt = -1;
           if (mxnestingd === 0 && pos.length > 0 && matrix) {
             for (i = 0; i < pos.length - 1; i++) {
-              if (i > 0) mxout += '\\\\';
+              if (i > 0) {
+                mxout += '\\\\';
+              }
               let subarr;
               if (i === 0) {
                 //subarr = newFrag.substr(pos[i]+7,pos[i+1]-pos[i]-15).split(',');
@@ -849,7 +888,9 @@ function parseExpr(str, rightbracket) {
           }
           mxout += '}';
 
-          if (matrix) { newFrag = mxout; }
+          if (matrix) {
+            newFrag = mxout;
+          }
         }
       }
     }
@@ -873,6 +914,7 @@ function parseExpr(str, rightbracket) {
   return [newFrag, str];
 }
 // yes
+/** @param {string} str */
 export default function asciimathToTex(str) {
   nestingDepth = 0;
   str = str

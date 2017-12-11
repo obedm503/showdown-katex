@@ -88,7 +88,7 @@ const showdownKatex = (userConfig) => () => {
 
         //return html without the initial <div>
         return div.innerHTML;
-      }
+      },
     },
   ];
 }
