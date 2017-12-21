@@ -30,8 +30,7 @@ function renderElements(elements, config, isAsciimath) {
  * @returns {string} regexp escaped string
  */
 function escapeRegExp(str) {
-  // eslint-disable-next-line no-useless-escape
-  return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  return str.replace(/[-[\]/{}()*+?.\\$^|]/g, "\\$&");
 }
 
 // katex config
