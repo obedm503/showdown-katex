@@ -82,34 +82,24 @@ var some =  normal('code');
 
 ## More examples
 
+You can write math in 2 ways: inline and code block.
+
 ### square roots
 <div class="row" markdown="1">
   <div class="col col-md-6"  markdown="1">
-    ```asciimath
-
-    c = +- sqrt(a^2 + b^2)
-
-    ```
+    && c = +- sqrt(a^2 + b^2) &&
   </div>
   <div class="col col-md-6" markdown="1">
-```asciimath
-c = +- sqrt(a^2 + b^2 )
-```
+&& c = +- sqrt(a^2 + b^2) &&
   </div>
 </div>
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    ```latex
-
-    c = \pm\sqrt{a^2 + b^2}
-
-    ```
+    $$ c = \pm\sqrt{a^2 + b^2} $$
   </div>
   <div class="col-md-6" markdown="1">
-```latex
-c = \pm\sqrt{a^2 + b^2}
-```
+$$ c = \pm\sqrt{a^2 + b^2} $$
   </div>
 </div>
 
@@ -118,30 +108,18 @@ c = \pm\sqrt{a^2 + b^2}
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    ```asciimath
-
-    sum_(i=1)^n i^3=((n(n+1))/2)^2
-
-    ```
+    && sum_(i=1)^n i^3=((n(n+1))/2)^2 &&
   </div>
   <div class="col-md-6" markdown="1">
-```asciimath
-sum_(i=1)^n i^3=((n(n+1))/2)^2
-```
+&& sum_(i=1)^n i^3=((n(n+1))/2)^2 &&
   </div>
 </div>
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    ```latex
-
-    \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
-
-    ```
+    $$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
   </div>
   <div class="col-md-6" markdown="1">
-```latex
-\sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
-```
+$$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
   </div>
 </div>
 
@@ -149,42 +127,33 @@ sum_(i=1)^n i^3=((n(n+1))/2)^2
 ### simple functions
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    ```asciimath
-
-    lim_(x->0) = f(x)' = 2x + 5
-
-    ```
+    && lim_(x->0) = f(x)' = 2x + 5 &&
   </div>
   <div class="col-md-6" markdown="1">
-```asciimath
-lim_(x->0) = f(x)' = 2x + 5
-```
+&& lim_(x->0) = f(x)' = 2x + 5 &&
   </div>
 </div>
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    ```latex
-
-    \lim_{x \to{0}} = f(x)' = 2x+5
-
-    ```
+    $$ \lim_{x \to{0}} = f(x)' = 2x+5 $$
   </div>
   <div class="col-md-6" markdown="1">
-```latex
-\lim_{x \to{0}} = f(x)' = 2x+5
-```
+$$ \lim_{x \to{0}} = f(x)' = 2x+5 $$
   </div>
 </div>
   </bootmark>
 
   <!-- changelog -->
-  <div class="bootmark" data-src="CHANGELOG.md"></div>
+  <bootmark src="CHANGELOG.md"></bootmark>
 
-  <script src="https://obedm503.github.io/bootmark/dist/bootmark.bundle.min.js"></script>
+  <script src="https://unpkg.com/bootmark@0.8.0/dist/bootmark.bundle.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/katex.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/contrib/auto-render.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.8.3/contrib/auto-render.min.js"></script>
+
   <script src="./dist/showdown-katex.js"></script>
+  <!-- <script src="https://unpkg.com/katex-latex@latest/dist/katex-latex.js"></script> -->
+
   <script>
     // define options. options in individual elements override these
     // these do not affect the live demo
@@ -194,7 +163,9 @@ lim_(x->0) = f(x)' = 2x + 5
         prettifyTheme: 'tomorrow-night-eighties'
       },
       showdown: {
-        extensions: ['showdown-katex']
+        extensions: [
+          showdownKatex(),
+        ],
       }
     };
 
