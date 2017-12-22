@@ -13,14 +13,15 @@ import asciimathToTex from './asciimath-to-tex';
  * @param {boolean} isAsciimath
  */
 function renderElements(elements, config, isAsciimath) {
-  if (elements.length) {
-    for (let i = 0, len = elements.length; i < len; i++) {
-      const element = elements[i];
-      const input = element.innerHTML;
-      const latex = isAsciimath ? asciimathToTex(input) : input;
-      const html = window.katex.renderToString(latex, config);
-      element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
-    }
+  if (!elements.length) {
+    return;
+  }
+  for (let i = 0, len = elements.length; i < len; i++) {
+    const element = elements[i];
+    const input = element.innerHTML;
+    const latex = isAsciimath ? asciimathToTex(input) : input;
+    const html = window.katex.renderToString(latex, config);
+    element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
   }
 }
 
@@ -44,12 +45,15 @@ const getConfig = (config = {}) => ({
     { left: "\\[", right: "\\]", display: true },
     { left: "\\(", right: "\\)", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
+    // TODO: this doesn't work because the && is escaped to &amp;&amp; and so it's not recognized
     { left: '&&', right: '&&', display: true, asciimath: true },
   ]).concat(config.delimiters || []),
 });
 
 const showdownKatex = (userConfig) => () => {
   return [
+    // escape regex characters and convert asciimath to tex
+    // TODO: ignore stuff inside code (backticks)
     {
       type: 'output',
       filter(text = '') {
@@ -58,6 +62,7 @@ const showdownKatex = (userConfig) => () => {
         if (!delimiters.length) {
           return text;
         }
+
         return delimiters.reduce((acc, delimiter) => {
           const test = new RegExp(
             `${ escapeRegExp(delimiter.left) }(.*?)${ escapeRegExp(delimiter.right) }`,
@@ -69,6 +74,7 @@ const showdownKatex = (userConfig) => () => {
         }, text);
       },
     },
+    // render math
     {
       type: 'output',
       filter(html) {
@@ -94,7 +100,7 @@ const showdownKatex = (userConfig) => () => {
   ];
 }
 
-// register extension
+// register extension with default config
 if (typeof window.showdown !== 'undefined') {
   window.showdown.extension('showdown-katex', showdownKatex());
 }
