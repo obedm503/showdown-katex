@@ -3,12 +3,13 @@
   "author": "obedm503",
   "homepage": "https://obedm503.github.io/showdown-katex/",
   "description": "katex extension for latex and asciimath in showdown (markdown + math)",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "./dist/showdown-katex.js",
   "jsnext:main": "./src/showdown-katex.js",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
@@ -23,10 +24,10 @@
   "npmName": "showdown-katex",
   "npmFileMap": [
     {
-      "basePath": "./dist/",
+      "basePath": ".",
       "files": [
-        "*.js",
-        "*.js.map"
+        "dist/*",
+        "src/*"
       ]
     }
   ],
