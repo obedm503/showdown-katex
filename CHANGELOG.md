@@ -4,14 +4,12 @@
 
 ### Future
 #### NEW
-#### FIX
-- add inline latex examples
-- add inline asciimath examples
-### 0.4.0 2017-11-27
-#### NEW
 - rename to showdown-katex
 - disallow global config
 - move `window.katexLatex` to `window.showdownKatex`
+#### FIX
+- add inline latex examples
+- add inline asciimath examples
 
 #### MIGRATION
 - update references to `katex-latex` in files and showdown extension and update to `showdown-katex`
@@ -29,7 +27,7 @@
         });
         converter.makeHtml('~x=2~')
 
-  if not using custom config, just list `showdown-katex` in the extensions
+  if not using custom config, just list `"showdown-katex"` in the extensions
 
 ### 0.3.1 2017-09-17
 #### FIXED
