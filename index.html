@@ -63,7 +63,7 @@ g(x) = 3x^4 + 2x^2
 ```
 
 ```js
-var some =  normal('code');
+var some = normal('code');
 ```
 </textarea>
       </div>
@@ -79,10 +79,51 @@ var some =  normal('code');
 
   <!-- examples -->
   <bootmark>
+You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ math here $$`, `&& math here &&`, `\\[ math here \\]`, `\\( math here \\)`, `~ math here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`.
+
+### Inline
+
+    Lorem ipsum dolor sit amet, ~E=mc^2~ consectetur adipiscing elit. Pellentesque porttitor, mauris a luctus aliquam, tellus purus porta nulla, eget finibus dolor dolor nec justo.
+
+Lorem ipsum dolor sit amet, ~E=mc^2~ consectetur adipiscing elit. Pellentesque porttitor, mauris a luctus aliquam, tellus purus porta nulla, eget finibus dolor dolor nec justo.
+
+### Code Block
+
+    ```asciimath
+    E=mc^2
+    ```
+
+```asciimath
+E=mc^2
+```
+
+### Default Delimiters
+
+| Format | Left  | Right | Display mode |
+| --- | --- | --- | --- |
+| Latex | `$$` | `$$` |`true` |
+| Latex | `\\[` | `\\]` |`true` |
+| Latex | `\\(` | `\\)` |`false` |
+| Asciimath | `~` | `~` |`false` |
+| Asciimath | `&&` | `&&` |`true` |
+
+To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
+
+Custom delimiters won't disable the defaults, so you can use both custom and default delimiters.
+```js
+const converter = new showdown.Converter({
+  extensions: [
+    showdownKatex({
+      delimiters: [
+        { left: "( ͡° ͜ʖ ͡°)", right: "( ͡° ͜ʖ ͡°)", asciimath: true },
+      ],
+    }),
+  ],
+});
+converter.makeHtml('some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), you can still use ~ E=Mc^2 ~');
+```
 
 ## More examples
-
-You can write math in 2 ways: inline and code block.
 
 ### square roots
 <div class="row" markdown="1">
