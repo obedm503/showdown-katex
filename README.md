@@ -1,7 +1,7 @@
 [![Stories in Ready](https://badge.waffle.io/obedm503/katex-latex.png?label=ready&title=Ready)](https://waffle.io/obedm503/katex-latex)
 # katex-latex
 
-> https://obedm503.github.io/katex-latex/
+> https://obedm503.github.io/showdown-katex/
 
 Showdown extension to display math using [KaTeX](https://khan.github.io/KaTeX/) and [LaTeX](https://www.latex-project.org/) or [AsciiMath](http://asciimath.org/)
 
@@ -77,6 +77,7 @@ in latex
 x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
 ```
 
-They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/katex-latex/).
+They will both render the exact same thing. If the examples don't render 
+correctly click [here](https://obedm503.github.io/showdown-katex/).
 
 ----
