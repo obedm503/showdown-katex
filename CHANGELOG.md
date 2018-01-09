@@ -7,9 +7,18 @@
 - rename to showdown-katex
 - disallow global config
 - move `window.katexLatex` to `window.showdownKatex`
+- katex is now bundled with showdownKatex, so there's no need to include externally anymore.
 #### FIX
 - add inline latex examples
 - add inline asciimath examples
+- remove `&&` as a delimiter for asciimath in displayMode. it was giving too mouch trouble. For asciimath in displayMode, use code block style with the lang set to `asciimath`. so:
+
+        && E=mc^2 &&
+  becomes
+
+        ```asciimath
+        E=mc^2
+        ```
 
 #### MIGRATION
 - update references to `katex-latex` in files and showdown extension and update to `showdown-katex`
