@@ -79,7 +79,7 @@ var some = normal('code');
 
   <!-- examples -->
   <bootmark>
-You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ math here $$`, `&& math here &&`, `\\[ math here \\]`, `\\( math here \\)`, `~ math here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`.
+You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ math here $$`, `\\[ math here \\]`, `\\( math here \\)`, `~ math here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`.
 
 ### Inline
 
@@ -105,7 +105,6 @@ E=mc^2
 | Latex | `\\[` | `\\]` |`true` |
 | Latex | `\\(` | `\\)` |`false` |
 | Asciimath | `~` | `~` |`false` |
-| Asciimath | `&&` | `&&` |`true` |
 
 To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
 
@@ -128,10 +127,14 @@ converter.makeHtml('some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), 
 ### square roots
 <div class="row" markdown="1">
   <div class="col col-md-6"  markdown="1">
-    && c = +- sqrt(a^2 + b^2) &&
+    ```asciimath
+    c = +- sqrt(a^2 + b^2)
+    ```
   </div>
   <div class="col col-md-6" markdown="1">
-&& c = +- sqrt(a^2 + b^2) &&
+```asciimath
+c = +- sqrt(a^2 + b^2)
+```
   </div>
 </div>
 
@@ -149,10 +152,14 @@ $$ c = \pm\sqrt{a^2 + b^2} $$
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    && sum_(i=1)^n i^3=((n(n+1))/2)^2 &&
+    ```asciimath
+    sum_(i=1)^n i^3=((n(n+1))/2)^2
+    ```
   </div>
   <div class="col-md-6" markdown="1">
-&& sum_(i=1)^n i^3=((n(n+1))/2)^2 &&
+```asciimath
+sum_(i=1)^n i^3=((n(n+1))/2)^2
+```
   </div>
 </div>
 <div class="row" markdown="1">
@@ -168,10 +175,14 @@ $$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
 ### simple functions
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    && lim_(x->0) = f(x)' = 2x + 5 &&
+    ```asciimath
+    lim_(x->0) = f(x)' = 2x + 5
+    ```
   </div>
   <div class="col-md-6" markdown="1">
-&& lim_(x->0) = f(x)' = 2x + 5 &&
+```asciimath
+ lim_(x->0) = f(x)' = 2x + 5
+```
   </div>
 </div>
 

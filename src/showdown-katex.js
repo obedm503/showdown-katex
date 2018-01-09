@@ -12,7 +12,7 @@ import asciimathToTex from './asciimath-to-tex';
  * @param config
  * @param {boolean} isAsciimath
  */
-function renderElements(elements, config, isAsciimath) {
+function renderBlockElements(elements, config, isAsciimath) {
   if (!elements.length) {
     return;
   }
@@ -46,13 +46,14 @@ const getConfig = (config = {}) => ({
     { left: "\\(", right: "\\)", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
     // TODO: this doesn't work because the && is escaped to &amp;&amp; and so it's not recognized
-    { left: '&&', right: '&&', display: true, asciimath: true },
+    // { left: '&&', right: '&&', display: true, asciimath: true },
   ]).concat(config.delimiters || []),
 });
 
 const showdownKatex = (userConfig) => () => {
   return [
     // escape regex characters and convert asciimath to tex
+    // the next sub-extension will convert tex to html
     // TODO: ignore stuff inside code (backticks)
     {
       type: 'output',
@@ -68,8 +69,8 @@ const showdownKatex = (userConfig) => () => {
             `${ escapeRegExp(delimiter.left) }(.*?)${ escapeRegExp(delimiter.right) }`,
             'g',
           );
-          return acc.replace(test, (match, capture) =>
-            `${ delimiter.left }${ asciimathToTex(capture) }${ delimiter.right }`
+          return acc.replace(test, (match, asciimath) =>
+            `${ delimiter.left }${ asciimathToTex(asciimath) }${ delimiter.right }`
           );
         }, text);
       },
