@@ -59,6 +59,9 @@
     "nodemon": "^1.12.0",
     "rollup": "^0.49.3",
     "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-commonjs": "^8.2.6",
+    "rollup-plugin-inject": "^2.0.0",
+    "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-plugin-uglify": "^2.0.1"
   },
   "optionalDependencies": {},

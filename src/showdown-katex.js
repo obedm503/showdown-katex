@@ -5,6 +5,8 @@
 * @examples https://obedm503.github.io/showdown-katex/
 * @license MIT
 */
+import katex from 'katex';
+import renderMathInElement from 'katex/dist/contrib/auto-render.min'
 import asciimathToTex from './asciimath-to-tex';
 
 /**
@@ -20,7 +22,7 @@ function renderBlockElements(elements, config, isAsciimath) {
     const element = elements[i];
     const input = element.innerHTML;
     const latex = isAsciimath ? asciimathToTex(input) : input;
-    const html = window.katex.renderToString(latex, config);
+    const html = katex.renderToString(latex, config);
     element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
   }
 }
@@ -88,11 +90,9 @@ const showdownKatex = (userConfig) => () => {
         const latex = div.querySelectorAll('code.latex.language-latex');
         const asciimath = div.querySelectorAll('code.asciimath.language-asciimath');
 
-        renderElements(latex, config);
-        renderElements(asciimath, config, true);
-        if (typeof window.renderMathInElement === 'function') {
-          window.renderMathInElement(div, config);
-        }
+        renderBlockElements(latex, config);
+        renderBlockElements(asciimath, config, true);
+        renderMathInElement(div, config);
 
         // return html without the initial <div>
         return div.innerHTML;
