@@ -1,15 +1,46 @@
-## katex-latex changelog
+## showdown-katex changelog
 
 > markdown + ( latex and/or asciimath )
 
 ### Future
 #### NEW
-- rename to showdown-katex?
-- move `window.katex.config` to `window.showdownKatex.config`?
-
 #### FIX
+
+### 0.4.0 2017-01-10
+#### NEW
+- rename to showdown-katex
+- disallow global config
+- move `window.katexLatex` to `window.showdownKatex`
+- katex is now bundled with showdownKatex, so there's no need to include externally anymore.
+#### FIXED
 - add inline latex examples
 - add inline asciimath examples
+- remove `&&` as a delimiter for asciimath in displayMode. it was giving too mouch trouble. For asciimath in displayMode, use code block style with the lang set to `asciimath`. so:
+
+        && E=mc^2 &&
+  becomes
+
+        ```asciimath
+        E=mc^2
+        ```
+
+#### MIGRATION
+- update references to `katex-latex` in files and showdown extension and update to `showdown-katex`
+- if previously using global config, it should now be passed to the global `showdownKatex` function which returns a showdown extension that can be passed as part of the `extensions` array
+
+        // before
+        window.katexLatex.config = {
+          throwOnError: true,
+        };
+        // now
+        const converter = new showdown.Converter({
+          extensions: [showdownKatex({
+            throwOnError: true,
+          })]
+        });
+        converter.makeHtml('~x=2~')
+
+  if not using custom config, just list `"showdown-katex"` in the extensions
 
 ### 0.3.1 2017-09-17
 #### FIXED

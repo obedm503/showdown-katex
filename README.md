@@ -1,17 +1,16 @@
-[![Stories in Ready](https://badge.waffle.io/obedm503/katex-latex.png?label=ready&title=Ready)](https://waffle.io/obedm503/katex-latex)
-# katex-latex
+# showdown-katex
 
-> https://obedm503.github.io/katex-latex/
+> `npm install showdown-katex`
 
-Showdown extension to display math using [KaTeX](https://khan.github.io/KaTeX/) and [LaTeX](https://www.latex-project.org/) or [AsciiMath](http://asciimath.org/)
+[Showdown](https://github.com/showdownjs/showdown) extension to render [LaTeX](https://www.latex-project.org/) math and [AsciiMath](http://asciimath.org/) using [KaTeX](https://khan.github.io/KaTeX/);
 
-Special characters do not need escaping. katex-latex is no longer dependent on jQuery!
+Special characters do not need escaping
 
 > Works well alongside [bootmark](https://obedm503.github.io/bootmark/)
 
 ## Config
 
-You can customize what gets passed to the katex renderer by using the `katex.config` object.
+You can customize what gets passed to the katex renderer by passing a config object.
 
 These are the defaults:
 
@@ -20,7 +19,7 @@ These are the defaults:
   displayMode: true,
   throwOnError: false, //allows katex to fail silently
   errorColor: '#ff0000',
-  [
+  delimiters: [
     { left: "$$", right: "$$", display: true }, // katex default
     { left: "\\[", right: "\\]", display: true }, // katex default
     { left: "\\(", right: "\\)", display: false }, // katex default
@@ -34,14 +33,19 @@ Examples:
 
 ```html
 <script>
-  // disable displayMode
-  katex.config.displayMode = false;
-
-  // maybe you want katex to throwOnError
-  katex.config.throwOnError = true;
-
-  // change errorColor to blue
-  katex.config.errorColor = '#1500ff';
+  const converter = new showdown.Converter({
+    extensions: [
+      showdownKatex({
+        // maybe you want katex to throwOnError
+        throwOnError: true,
+        // disable displayMode
+        displayMode: false,
+        // change errorColor to blue
+        errorColor: '#1500ff',
+      }),
+    ],
+  });
+  converter.makeHtml('~x=2~');
 </script>
 ```
 Check [katex for more details](https://github.com/Khan/KaTeX#user-content-rendering-options).
@@ -59,24 +63,16 @@ This hides the body and shows it only when the JavaScript has loaded.
 
 in asciimath
 
-    ```asciimath
-    x = (-b+-sqrt(b^2-4ac))/(2a)
-    ```
+    && x = (-b+-sqrt(b^2-4ac))/(2a) &&
 
-```asciimath
-x = (-b+-sqrt(b^2-4ac))/(2a)
-```
+&& x = (-b+-sqrt(b^2-4ac))/(2a) &&
 
 in latex
 
-    ```latex
-    x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
-    ```
+    $$ x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a} $$
 
-```latex
-x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
-```
+$$ x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a} $$
 
-They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/katex-latex/).
+They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/showdown-katex/).
 
 ----

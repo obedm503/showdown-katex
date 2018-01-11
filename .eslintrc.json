@@ -10,6 +10,19 @@
   "extends": "eslint:recommended",
   "parser": "babel-eslint",
   "rules": {
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "eqeqeq": "error",
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "brace-style": "error",
+    "curly": "error",
+    "prefer-template": "error",
+    "spaced-comment": "error",
+    "template-curly-spacing": [
+      "error",
+      "always"
+    ]
   }
 }
