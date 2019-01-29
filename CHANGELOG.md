@@ -5,6 +5,15 @@
 ### Future
 #### NEW
 #### FIX
+- documentation build system
+
+### 0.5.0 2019-01-28
+#### NEW
+- update `katex` dependency to `0.10.0`
+#### FIXED
+- `&&` asciimath separator seems to work now `¯\_(ツ)_/¯`
+- correct files now uploaded to npm
+- eslint errors
 
 ### 0.4.0 2017-01-10
 #### NEW

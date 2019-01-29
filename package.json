@@ -10,34 +10,25 @@
     "asciimath",
     "katex"
   ],
-  "version": "0.4.0",
+  "version": "0.5.0",
   "license": "MIT",
-  "main": "./dist/showdown-katex.js",
-  "jsnext:main": "./src/showdown-katex.js",
+  "main": "dist/showdown-katex.js",
+  "jsnext:main": "src/showdown-katex.js",
+  "unpkg": "dist/showdown-katex.js",
   "files": [
     "dist",
     "src"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
-    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run dist:umd'",
-    "dist:umd": "BABEL_ENV=build rollup -c",
-    "dist:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
-    "dist": "npm run dist:umd && npm run dist:umd:min",
-    "prepublishOnly": "npm run clean && npm run dist",
+    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build:umd'",
+    "build:umd": "BABEL_ENV=build rollup -c",
+    "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
+    "build": "npm run build:umd && npm run build:umd:min",
+    "prepublishOnly": "npm run clean && npm run build",
     "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose",
     "lint": "eslint ."
   },
-  "npmName": "showdown-katex",
-  "npmFileMap": [
-    {
-      "basePath": ".",
-      "files": [
-        "dist/*",
-        "src/*"
-      ]
-    }
-  ],
   "ava": {
     "require": "babel-register",
     "babel": "inherit"
@@ -47,7 +38,7 @@
     "url": "https://github.com/obedm503/showdown-katex.git"
   },
   "dependencies": {
-    "katex": "^0.8.3"
+    "katex": "^0.10.0"
   },
   "peerDependencies": {
     "showdown": "^1.4.3"
