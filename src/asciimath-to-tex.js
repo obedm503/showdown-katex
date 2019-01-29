@@ -349,8 +349,10 @@ function removeCharsAndBlanks(str, n) {
   } else {
     st = str.slice(n);
   }
-  let i;
-  for (i = 0; i < st.length && st.charCodeAt(i) <= 32; i++) {}
+  let i = 0;
+  while (i < st.length && st.charCodeAt(i) <= 32) {
+    i++;
+  }
   return st.slice(i);
 }
 
@@ -371,8 +373,10 @@ function position(arr, str, n) {
     }
     return len;
   }
-  let i;
-  for (i = n; i < arr.length && arr[i] < str; i++) {}
+  let i = n;
+  while (i < arr.length && arr[i] < str) {
+    i++;
+  }
   return i; // i=arr.length || arr[i]>=str
 }
 

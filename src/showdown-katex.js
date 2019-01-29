@@ -48,7 +48,8 @@ const getConfig = (config = {}) => ({
     { left: "\\(", right: "\\)", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
     // TODO: this doesn't work because the && is escaped to &amp;&amp; and so it's not recognized
-    // { left: '&&', right: '&&', display: true, asciimath: true },
+    // 2019-01-08: it works now, don't know why
+    { left: '&&', right: '&&', display: true, asciimath: true },
   ]).concat(config.delimiters || []),
 });
 

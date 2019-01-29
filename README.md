@@ -17,7 +17,7 @@ These are the defaults:
 ```js
 {
   displayMode: true,
-  throwOnError: false, //allows katex to fail silently
+  throwOnError: false, // allows katex to fail silently
   errorColor: '#ff0000',
   delimiters: [
     { left: "$$", right: "$$", display: true }, // katex default
