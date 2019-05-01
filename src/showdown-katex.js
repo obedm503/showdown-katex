@@ -20,7 +20,7 @@ function renderBlockElements(elements, config, isAsciimath) {
   }
   for (let i = 0, len = elements.length; i < len; i++) {
     const element = elements[i];
-    const input = element.innerHTML;
+    const input = element.textContent;
     const latex = isAsciimath ? asciimathToTex(input) : input;
     const html = katex.renderToString(latex, config);
     element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
