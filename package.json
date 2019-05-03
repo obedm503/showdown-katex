@@ -10,7 +10,7 @@
     "asciimath",
     "katex"
   ],
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "main": "dist/showdown-katex.js",
   "jsnext:main": "src/showdown-katex.js",

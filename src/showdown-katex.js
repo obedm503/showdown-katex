@@ -10,21 +10,22 @@ import renderMathInElement from 'katex/dist/contrib/auto-render.min'
 import asciimathToTex from './asciimath-to-tex';
 
 /**
- * @param {NodeListOf<Element>} elements
- * @param config
- * @param {boolean} isAsciimath
+ * @param {object} opts
+ * @param {NodeListOf<Element>} opts.elements
+ * @param opts.config
+ * @param {boolean} opts.isAsciimath
  */
-function renderBlockElements(elements, config, isAsciimath) {
+function renderBlockElements({ elements, config, isAsciimath }) {
   if (!elements.length) {
     return;
   }
-  for (let i = 0, len = elements.length; i < len; i++) {
-    const element = elements[i];
-    const input = element.innerHTML;
+
+  elements.forEach(element => {
+    const input = element.textContent;
     const latex = isAsciimath ? asciimathToTex(input) : input;
     const html = katex.renderToString(latex, config);
     element.parentNode.outerHTML = `<span title="${ input }">${ html }</span>`;
-  }
+  });
 }
 
 /**
@@ -43,13 +44,8 @@ const getConfig = (config = {}) => ({
   errorColor: '#ff0000',
   ...config,
   delimiters: ([
-    { left: "$$", right: "$$", display: true },
-    { left: "\\[", right: "\\]", display: true },
-    { left: "\\(", right: "\\)", display: false },
+    { left: "$$", right: "$$", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
-    // TODO: this doesn't work because the && is escaped to &amp;&amp; and so it's not recognized
-    // 2019-01-08: it works now, don't know why
-    { left: '&&', right: '&&', display: true, asciimath: true },
   ]).concat(config.delimiters || []),
 });
 
@@ -91,8 +87,9 @@ const showdownKatex = (userConfig) => () => {
         const latex = div.querySelectorAll('code.latex.language-latex');
         const asciimath = div.querySelectorAll('code.asciimath.language-asciimath');
 
-        renderBlockElements(latex, config);
-        renderBlockElements(asciimath, config, true);
+        renderBlockElements({ elements: latex, config });
+        renderBlockElements({ elements: asciimath, config, isAsciimath: true });
+        
         renderMathInElement(div, config);
 
         // return html without the initial <div>
