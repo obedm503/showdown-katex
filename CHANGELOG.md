@@ -1,11 +1,20 @@
 ## showdown-katex changelog
 
-> markdown + ( latex and/or asciimath )
-
 ### Future
+#### BREAKING
 #### NEW
 #### FIX
 - documentation build system
+
+### 0.6.0
+#### FIX
+- rendering math inside inline code and code blocks
+#### BREAKING
+- make `$$` latex delimiter inline instead of display mode
+- use code block style to use display mode
+  - remove `\\[ ... \\]` latex delimiter
+  - remove `\\( ... \\)` latex delimiter
+  - remove `&&` asciimath delimiter
 
 ### 0.5.0 2019-01-28
 #### NEW

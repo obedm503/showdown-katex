@@ -36,7 +36,7 @@
     }
   </style>
 </head>
-<body style="display:none;" onload="$('body').show();">
+<body style="display:none;" onload="document.body.style.display = 'block'">
   <!-- readme -->
   <bootmark src="README.md"></bootmark>
 
@@ -79,7 +79,7 @@ var some = normal('code');
 
   <!-- examples -->
   <bootmark>
-You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ math here $$`, `\\[ math here \\]`, `\\( math here \\)`, `~ math here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`. Because code block style is more limited, `displayMode` will be the `displayMode` passed to the extension config or the [katex default](https://github.com/Khan/KaTeX#rendering-options).
+You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ latex here $$` and `~ asciimath here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`. Because code block style is more limited, `displayMode` will be the `displayMode` passed to the extension config or the [katex default](https://github.com/Khan/KaTeX#rendering-options).
 
 ### Inline
 
@@ -101,9 +101,7 @@ E=mc^2
 
 | Format | Left  | Right | Display mode |
 | --- | --- | --- | --- |
-| Latex | `$$` | `$$` |`true` |
-| Latex | `\\[` | `\\]` |`true` |
-| Latex | `\\(` | `\\)` |`false` |
+| Latex | `$$` | `$$` |`false` |
 | Asciimath | `~` | `~` |`false` |
 
 To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
@@ -140,10 +138,14 @@ c = +- sqrt(a^2 + b^2)
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    $$ c = \pm\sqrt{a^2 + b^2} $$
+    ```latex
+    c = \pm\sqrt{a^2 + b^2}
+    ```
   </div>
   <div class="col-md-6" markdown="1">
-$$ c = \pm\sqrt{a^2 + b^2} $$
+```latex
+c = \pm\sqrt{a^2 + b^2}
+```
   </div>
 </div>
 
@@ -164,10 +166,14 @@ sum_(i=1)^n i^3=((n(n+1))/2)^2
 </div>
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    $$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
+    ```latex
+    \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
+    ```
   </div>
   <div class="col-md-6" markdown="1">
-$$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
+```latex
+\sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
+```
   </div>
 </div>
 
@@ -188,10 +194,37 @@ $$ \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2 $$
 
 <div class="row" markdown="1">
   <div class="col-md-6" markdown="1">
-    $$ \lim_{x \to{0}} = f(x)' = 2x+5 $$
+    ```latex
+    \lim_{x \to{0}} = f(x)' = 2x + 5
+    ```
   </div>
   <div class="col-md-6" markdown="1">
-$$ \lim_{x \to{0}} = f(x)' = 2x+5 $$
+```latex
+\lim_{x \to{0}} = f(x)' = 2x + 5
+```
+  </div>
+</div>
+
+----
+### more complex math
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```latex
+    \begin{aligned}
+    F(\textbf{w}) 
+    &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+    &= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
+    \end{aligned}
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```latex
+\begin{aligned}
+F(\textbf{w}) 
+&= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+&= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
+\end{aligned}
+```
   </div>
 </div>
   </bootmark>
@@ -212,9 +245,7 @@ $$ \lim_{x \to{0}} = f(x)' = 2x+5 $$
         prettifyTheme: 'tomorrow-night-eighties'
       },
       showdown: {
-        extensions: [
-          showdownKatex(),
-        ],
+        extensions: [showdownKatex()],
       }
     };
 

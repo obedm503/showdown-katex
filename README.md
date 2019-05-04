@@ -20,11 +20,8 @@ These are the defaults:
   throwOnError: false, // allows katex to fail silently
   errorColor: '#ff0000',
   delimiters: [
-    { left: "$$", right: "$$", display: true }, // katex default
-    { left: "\\[", right: "\\]", display: true }, // katex default
-    { left: "\\(", right: "\\)", display: false }, // katex default
+    { left: "$$", right: "$$", display: false }, // katex default
     { left: '~', right: '~', display: false, asciimath: true },
-    { left: '&&', right: '&&', display: true, asciimath: true },
   ],
 }
 ```
@@ -55,23 +52,27 @@ Check [katex for more details](https://github.com/Khan/KaTeX#user-content-render
 If your page suffers from a "Flash Of Unstyled Content,"  add this to your `<body>` tag:
 
 ```html
-<body  style="display:none;" onload="$('body').show();">
+<body style="display:none;" onload="document.body.style.display='block'">
 ```
 This hides the body and shows it only when the JavaScript has loaded.
 
 ## Math Example
 
-in asciimath
+    ```asciimath
+    x = (-b +- sqrt(b^2-4ac)) / (2a)
+    ```
 
-    && x = (-b+-sqrt(b^2-4ac))/(2a) &&
+```asciimath
+x = (-b +- sqrt(b^2-4ac)) / (2a)
+```
 
-&& x = (-b+-sqrt(b^2-4ac))/(2a) &&
+    ```latex
+    x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
+    ```
 
-in latex
-
-    $$ x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a} $$
-
-$$ x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a} $$
+```latex
+x=\frac{ -b\pm\sqrt{ b^2-4ac } } {2a}
+```
 
 They will both render the exact same thing. If the examples don't render correctly click [here](https://obedm503.github.io/showdown-katex/).
 
