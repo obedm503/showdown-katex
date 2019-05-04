@@ -211,15 +211,17 @@ sum_(i=1)^n i^3=((n(n+1))/2)^2
   <div class="col-md-6" markdown="1">
     ```latex
     \begin{aligned}
-    F(\textbf{w}) &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+    F(\textbf{w}) 
+    &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
     &= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
     \end{aligned}
     ```
   </div>
   <div class="col-md-6" markdown="1">
 ```latex
- \begin{aligned}
-F(\textbf{w}) &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+\begin{aligned}
+F(\textbf{w}) 
+&= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
 &= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
 \end{aligned}
 ```
@@ -231,8 +233,8 @@ F(\textbf{w}) &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
   <bootmark src="CHANGELOG.md"></bootmark>
 
   <script src="https://unpkg.com/bootmark@0.8.0/dist/bootmark.bundle.min.js"></script>
-  <script src="./dist/showdown-katex.js"></script>
-  <!-- <script src="https://unpkg.com/showdown-katex@latest/dist/showdown-katex.min.js"></script> -->
+  <!-- <script src="./dist/showdown-katex.js"></script> -->
+  <script src="https://unpkg.com/showdown-katex@latest/dist/showdown-katex.min.js"></script>
 
   <script>
     // define options. options in individual elements override these
