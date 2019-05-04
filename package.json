@@ -53,8 +53,9 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.3.4",
     "rollup-plugin-inject": "^2.2.0",
+    "rollup-plugin-license": "^0.8.1",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-uglify": "^6.0.2"
+    "rollup-plugin-terser": "^4.0.4"
   },
   "optionalDependencies": {},
   "engines": {

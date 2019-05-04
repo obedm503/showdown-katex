@@ -1,4 +1,5 @@
-/** !
+/**!
+ * @preserve
 Based on ASCIIMathTeXImg.js but now part of https://github.com/obedm503/showdown-katex
 
 Based on ASCIIMathML, Version 1.4.7 Aug 30, 2005, (c) Peter Jipsen http://www.chapman.edu/~jipsen

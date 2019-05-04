@@ -1,10 +1,3 @@
-/** !
- * @file showdown-katex: markdown + ( latex and/or asciimath )
- * @author obedm503
- * @git https://github.com/obedm503/showdown-katex.git
- * @examples https://obedm503.github.io/showdown-katex/
- * @license MIT
- */
 import katex from 'katex';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
 import asciimathToTex from './asciimath-to-tex';
