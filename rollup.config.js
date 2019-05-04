@@ -1,14 +1,14 @@
 import babel from 'rollup-plugin-babel';
-import uglify from 'rollup-plugin-uglify';
+import { uglify } from 'rollup-plugin-uglify';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import inject from 'rollup-plugin-inject';
 
 const config = {
-  name: 'showdownKatex',
-  sourcemap: true,
   input: './src/showdown-katex.js',
   output: {
+    name: 'showdownKatex',
+    sourcemap: true,
     file: './dist/showdown-katex.js',
     format: 'umd',
   },
@@ -28,17 +28,18 @@ const config = {
 
 if (process.env.MIN === 'true') {
   config.output.file = './dist/showdown-katex.min.js';
-  config.plugins.push(uglify({
-    output: {
-      comments: /^!|@preserve|@license|@cc_on/ig,
-    },
-    compress: {
-      pure_getters: true,
-      unsafe: true,
-      unsafe_comps: true,
-      warnings: true,
-    },
-  }));
+  config.plugins.push(
+    uglify({
+      output: {
+        comments: /^!|@preserve|@license|@cc_on/gi,
+      },
+      compress: {
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+      },
+    }),
+  );
 }
 
 export default config;
