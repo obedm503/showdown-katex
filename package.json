@@ -2,7 +2,7 @@
   "name": "showdown-katex",
   "author": "obedm503",
   "homepage": "https://obedm503.github.io/showdown-katex/",
-  "description": "showdown extension that adds latex and asciimath support thru katex",
+  "description": "showdown extension that adds latex and asciimath support",
   "keywords": [
     "markdown",
     "showdown",
