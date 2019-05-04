@@ -1,12 +1,14 @@
 ## showdown-katex changelog
 
 ### Future
+#### BREAKING
 #### NEW
 #### FIX
 - documentation build system
-#### BREAKING
 
 ### 0.6.0
+#### FIX
+- rendering math inside inline code and code blocks
 #### BREAKING
 - make `$$` latex delimiter inline instead of display mode
 - use code block style to use display mode

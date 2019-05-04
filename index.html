@@ -36,7 +36,7 @@
     }
   </style>
 </head>
-<body style="display:none;" onload="$('body').show();">
+<body style="display:none;" onload="document.body.style.display = 'block'">
   <!-- readme -->
   <bootmark src="README.md"></bootmark>
 
@@ -243,9 +243,7 @@ F(\textbf{w}) &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
         prettifyTheme: 'tomorrow-night-eighties'
       },
       showdown: {
-        extensions: [
-          showdownKatex(),
-        ],
+        extensions: [showdownKatex()],
       }
     };
 
