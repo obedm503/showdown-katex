@@ -6,6 +6,14 @@
 #### FIX
 - documentation build system
 
+### 0.7.0 2019-08-03
+#### NEW
+- nodejs support: polyfill `DOMParser` and `document` with jsdom package and
+  add cjs build in `lib/` (#7, #11)
+#### POSSIBLE BREAKING
+- point `package.json`.`main` to cjs build
+- point `package.json`.`browser` to umd build
+
 ### 0.6.0
 #### FIX
 - rendering math inside inline code and code blocks
