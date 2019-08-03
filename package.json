@@ -62,8 +62,5 @@
     "rollup-plugin-terser": "^5.1.1",
     "showdown": "^1.4.3"
   },
-  "optionalDependencies": {},
-  "engines": {
-    "node": "*"
-  }
+  "optionalDependencies": {}
 }
