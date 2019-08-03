@@ -1,6 +1,14 @@
 import katex from 'katex';
 import renderMathInElement from 'katex/dist/contrib/auto-render';
+import showdown from 'showdown';
 import asciimathToTex from './asciimath-to-tex';
+
+if (process.env.TARGET === 'cjs') {
+  const { JSDOM } = require('jsdom');
+  const jsdom = new JSDOM();
+  global.DOMParser = jsdom.window.DOMParser;
+  global.document = jsdom.window.document;
+}
 
 /**
  * @param {object} opts
@@ -104,8 +112,6 @@ const showdownKatex = userConfig => () => {
 };
 
 // register extension with default config
-if (typeof window.showdown !== 'undefined') {
-  window.showdown.extension('showdown-katex', showdownKatex());
-}
+showdown.extension('showdown-katex', showdownKatex());
 
 export default showdownKatex;

@@ -12,7 +12,8 @@
   ],
   "version": "0.6.0",
   "license": "MIT",
-  "main": "dist/showdown-katex.js",
+  "browser": "dist/showdown-katex.js",
+  "main": "lib/showdown-katex.js",
   "jsnext:main": "src/showdown-katex.js",
   "unpkg": "dist/showdown-katex.js",
   "files": [
@@ -22,11 +23,12 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build:umd'",
+    "build:cjs": "BABEL_ENV=build rollup -c --environment TARGET:cjs",
     "build:umd": "BABEL_ENV=build rollup -c",
     "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
-    "build": "npm run build:umd && npm run build:umd:min",
+    "build": "npm run build:umd && npm run build:umd:min && npm run build:cjs",
     "prepublishOnly": "npm run clean && npm run build",
-    "test": "BABEL_ENV=test ava ./src/*.spec.js --verbose"
+    "test": "npm run build:cjs && BABEL_ENV=test ava ./src/*.spec.js --verbose"
   },
   "ava": {
     "require": "@babel/register"
@@ -36,6 +38,7 @@
     "url": "https://github.com/obedm503/showdown-katex.git"
   },
   "dependencies": {
+    "jsdom": "^15.1.1",
     "katex": "^0.10.1"
   },
   "peerDependencies": {
@@ -55,7 +58,9 @@
     "rollup-plugin-inject": "^2.2.0",
     "rollup-plugin-license": "^0.8.1",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^4.0.4",
+    "showdown": "^1.4.3"
   },
   "optionalDependencies": {},
   "engines": {
