@@ -18,7 +18,8 @@
   "unpkg": "dist/showdown-katex.js",
   "files": [
     "dist",
-    "src"
+    "src",
+    "lib"
   ],
   "scripts": {
     "clean": "rm -rf dist/",
