@@ -1,6 +1,6 @@
 // @ts-check
 const { join } = require('path');
-const { writeFile, readFile, ensureDir } = require('fs-extra');
+const { writeFile, readFile, ensureDir, copyFile } = require('fs-extra');
 const ejs = require('ejs');
 
 (async () => {
@@ -12,5 +12,9 @@ const ejs = require('ejs');
 
   const out = await ejs.render(input, { SRC }, { async: true });
   await ensureDir(join(__dirname, 'dist'));
-  await writeFile(join(__dirname, 'dist/index.html'), out);
+  await Promise.all([
+    writeFile(join(__dirname, 'dist/index.html'), out),
+    copyFile('CHANGELOG.md', 'dist/CHANGELOG.md'),
+    copyFile('README.md', 'dist/README.md'),
+  ]);
 })();

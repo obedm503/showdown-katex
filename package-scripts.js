@@ -4,7 +4,7 @@ const { concurrent, series, rimraf, crossEnv } = require('nps-utils');
 exports.scripts = {
   default: 'nps dev',
   docs: 'node docs.js',
-  deploy: series('nps docs', 'gh-pages -d dist'),
+  deploy: series('NODE_ENV=production nps docs', 'gh-pages -d dist'),
   clean: rimraf('dist lib'),
   dev: series(
     'nps clean',
