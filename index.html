@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>showdown-katex</title>
+  <link rel="stylesheet" href="https://unpkg.com/katex@0.10.0/dist/katex.min.css">
+  <style>
+    code {
+      padding:2px 4px !important;
+    }
+    #sandbox {
+      background-color: silver;
+    }
+    #sandbox > .col-md-6 > #sandbox-out, #sandbox > .col-md-6 > #sandbox-in {
+      border: none;
+      box-sizing: border-box;
+      height: 350px;
+      padding: 10px;
+      resize: none;
+      width: 100%;
+    }
+    #sandbox-in {
+      margin: 10px auto;
+      background: #000;
+      color: #fff;
+      font: 14px Menlo, monospace;
+    }
+    #sandbox-in:focus {
+      outline: none !important;
+      border:1px solid red;
+      box-shadow: 0 0 10px #719ECE;
+    }
+    #sandbox-out {
+      color: black;
+      margin: 20px auto;
+      background: white;
+    }
+  </style>
+</head>
+<body style="display:none;" onload="document.body.style.display = 'block'">
+  <!-- readme -->
+  <bootmark src="README.md"></bootmark>
+
+
+  <!-- sandboxed demo -->
+  <div class="container">
+    <div class="row">
+      <h3>Try the live demo</h3>
+    </div>
+    <div class="row" id="sandbox">
+      <div class="col-md-6">
+        <h4 class="text-center">
+          Input Markdown
+        </h4>
+<textarea id="sandbox-in">
+#### Some Markdown Here
+
+```asciimath
+g(x) = 3x^4 + 2x^2
+```
+
+```latex
+\sum_{i=1}^n i^3 = \left( \frac{n(g(n)+1)} 2 \right) ^2
+```
+
+```js
+var some = normal('code');
+```
+</textarea>
+      </div>
+      <div class="col-md-6">
+        <h4 class="text-center">
+          Output Pretty
+        </h4>
+        <div id="sandbox-out"></div>
+      </div>
+    </div>
+    <hr />
+  </div>
+
+  <!-- examples -->
+  <bootmark>
+You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ latex here $$` and `~ asciimath here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`. Because code block style is more limited, `displayMode` will be the `displayMode` passed to the extension config or the [katex default](https://github.com/Khan/KaTeX#rendering-options).
+
+### Inline
+
+    Lorem ipsum dolor sit amet, ~E=mc^2~ consectetur adipiscing elit. Pellentesque porttitor, mauris a luctus aliquam, tellus purus porta nulla, eget finibus dolor dolor nec justo.
+
+Lorem ipsum dolor sit amet, ~E=mc^2~ consectetur adipiscing elit. Pellentesque porttitor, mauris a luctus aliquam, tellus purus porta nulla, eget finibus dolor dolor nec justo.
+
+### Code Block
+
+    ```asciimath
+    E=mc^2
+    ```
+
+```asciimath
+E=mc^2
+```
+
+### Default Delimiters
+
+| Format | Left  | Right | Display mode |
+| --- | --- | --- | --- |
+| Latex | `$$` | `$$` |`false` |
+| Asciimath | `~` | `~` |`false` |
+
+To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
+
+Custom delimiters won't disable the defaults, so you can use both custom and default delimiters.
+```js
+const converter = new showdown.Converter({
+  extensions: [
+    showdownKatex({
+      delimiters: [
+        { left: "( ͡° ͜ʖ ͡°)", right: "( ͡° ͜ʖ ͡°)", asciimath: true },
+      ],
+    }),
+  ],
+});
+converter.makeHtml('some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), you can still use ~ E=Mc^2 ~');
+```
+
+## More examples
+
+### square roots
+<div class="row" markdown="1">
+  <div class="col col-md-6"  markdown="1">
+    ```asciimath
+    c = +- sqrt(a^2 + b^2)
+    ```
+  </div>
+  <div class="col col-md-6" markdown="1">
+```asciimath
+c = +- sqrt(a^2 + b^2)
+```
+  </div>
+</div>
+
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```latex
+    c = \pm\sqrt{a^2 + b^2}
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```latex
+c = \pm\sqrt{a^2 + b^2}
+```
+  </div>
+</div>
+
+----
+### sumations
+
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```asciimath
+    sum_(i=1)^n i^3=((n(n+1))/2)^2
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```asciimath
+sum_(i=1)^n i^3=((n(n+1))/2)^2
+```
+  </div>
+</div>
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```latex
+    \sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```latex
+\sum_{i=1}^n i^3 = \left( \frac{n(n+1)} 2 \right) ^2
+```
+  </div>
+</div>
+
+----
+### simple functions
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```asciimath
+    lim_(x->0) = f(x)' = 2x + 5
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```asciimath
+ lim_(x->0) = f(x)' = 2x + 5
+```
+  </div>
+</div>
+
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```latex
+    \lim_{x \to{0}} = f(x)' = 2x + 5
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```latex
+\lim_{x \to{0}} = f(x)' = 2x + 5
+```
+  </div>
+</div>
+
+----
+### more complex math
+<div class="row" markdown="1">
+  <div class="col-md-6" markdown="1">
+    ```latex
+    \begin{aligned}
+    F(\textbf{w})
+    &= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+    &= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
+    \end{aligned}
+    ```
+  </div>
+  <div class="col-md-6" markdown="1">
+```latex
+\begin{aligned}
+F(\textbf{w})
+&= \sum_{k=1}^{K} \frac{n_k}{N} F_{k}(\textbf{w}) \\
+&= \sum_{k=1}^{K} \frac{n_k}{N} \frac{1}{n_k} \sum_{i \in \mathcal{P}_{k}} l(\textbf{x}_{i}, \textbf{y}_{i}; \textbf{w})
+\end{aligned}
+```
+  </div>
+</div>
+  </bootmark>
+
+  <!-- changelog -->
+  <bootmark src="CHANGELOG.md"></bootmark>
+
+  <script src="https://unpkg.com/bootmark@0.8.0/dist/bootmark.bundle.min.js"></script>
+  <script src="showdown-katex.js"></script>
+
+  <script>
+    // define options. options in individual elements override these
+    // these do not affect the live demo
+    $.fn.bootmark.options = {
+      html: {
+        toc: false,
+        prettifyTheme: 'tomorrow-night-eighties'
+      },
+      showdown: {
+        extensions: [showdownKatex()],
+      }
+    };
+
+    // sandboxed live demo
+    $(function() {
+      var $input = $( '#sandbox-in' );
+      var $output = $( '#sandbox-out' );
+
+      function render() {
+        $output.bootmark({
+          // markdown passed directly
+          markdown: $input.val(),
+          template: {
+            // "export" only the html produced
+            text:'${bootmark}'
+          }
+        });
+      }
+
+      $input.bind('input propertychange', render);
+
+      render();
+    });
+  </script>
+</body>
+</html>
