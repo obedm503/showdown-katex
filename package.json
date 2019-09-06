@@ -22,14 +22,10 @@
     "lib"
   ],
   "scripts": {
-    "clean": "rm -rf dist/",
-    "start": "npm run clean && http-server & nodemon --watch src --exec 'npm run build:umd'",
-    "build:cjs": "BABEL_ENV=build rollup -c --environment TARGET:cjs",
-    "build:umd": "BABEL_ENV=build rollup -c",
-    "build:umd:min": "BABEL_ENV=build rollup -c --environment MIN",
-    "build": "npm run build:umd && npm run build:umd:min && npm run build:cjs",
-    "prepublishOnly": "npm run clean && npm run build",
-    "test": "npm run build:cjs && BABEL_ENV=test ava ./src/*.spec.js --verbose"
+    "dev": "nps dev",
+    "build": "nps build",
+    "prepublishOnly": "nps build && nps deploy",
+    "test": "nps build.cjs && BABEL_ENV=test ava ./src/*.spec.js --verbose"
   },
   "ava": {
     "require": "@babel/register"
@@ -51,8 +47,12 @@
     "@babel/preset-env": "^7.4.4",
     "@babel/register": "^7.4.4",
     "ava": "^2.2.0",
+    "ejs": "^2.7.1",
+    "fs-extra": "^8.1.0",
     "http-server": "^0.11.1",
     "nodemon": "^1.19.0",
+    "nps": "^5.9.8",
+    "nps-utils": "^1.7.0",
     "rollup": "^1.11.0",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^10.0.2",
