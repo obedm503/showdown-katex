@@ -25,6 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+// @ts-check
 
 // token types
 const tokens = {
@@ -41,6 +42,24 @@ const tokens = {
   TEXT: 10,
 };
 
+/**
+ * @typedef Symbol
+ * @property {string} input
+ * @property {string} tag
+ * @property {string} [output]
+ * @property {string} [tex]
+ * @property {number} [ttype]
+ * @property {boolean} [val]
+ * @property {boolean} [notexcopy]
+ * @property {boolean} [invisible]
+ * @property {boolean} [func]
+ * @property {string[]} [rewriteleftright]
+ * @property {boolean} [acc]
+ * @property {string} [atname]
+ * @property {string} [atval]
+ */
+
+/** @type {Symbol} */
 const quoteSymbol = {
   input: "'",
   tag: 'mtext',
@@ -49,6 +68,7 @@ const quoteSymbol = {
   ttype: tokens.TEXT,
 };
 
+/** @type {Array<Symbol>} */
 const symbols = [
   // some greek symbols
   {
@@ -1671,23 +1691,28 @@ const symbols = [
   },
 ];
 
+/** @type {Array<string>} */
 let inputSymbols = [];
+{
+  const otherSymbols = symbols
+    .filter(item => item.tex && item.notexcopy !== true)
+    .map(item => ({
+      input: item.tex,
+      tag: item.tag,
+      output: item.output,
+      ttype: item.ttype,
+      acc: item.acc || false,
+    }));
+  symbols.push(...otherSymbols);
 
-function refreshSymbols() {
   symbols.sort((s1, s2) => (s1.input > s2.input ? 1 : -1));
   inputSymbols = symbols.map(item => item.input);
 }
 
-// function newcommand(oldstr, newstr) {
-//   symbols.push({ input: oldstr, tag: 'mo', output: newstr, tex: null, ttype: tokens.DEFINITION });
-//   refreshSymbols();
-// }
-
-// function newsymbol(symbolobj) {
-//   symbols.push(symbolobj);
-//   refreshSymbols();
-// }
-
+/**
+ * @param {string} str
+ * @param {number} n
+ */
 function removeCharsAndBlanks(str, n) {
   // remove n characters and any following blanks
   let st;
@@ -1707,6 +1732,11 @@ function removeCharsAndBlanks(str, n) {
   return st.slice(i);
 }
 
+/**
+ * @param {string[]} arr
+ * @param {string} str
+ * @param {number} n
+ */
 function position(arr, str, n) {
   // return position >=n where str appears or would be inserted
   // assumes arr is sorted
@@ -1731,7 +1761,11 @@ function position(arr, str, n) {
   return i; // i=arr.length || arr[i]>=str
 }
 
+/** @param {string} str */
 function getSymbol(str) {
+  let previousSymbol;
+  let currentSymbol;
+
   // return maximal initial substring of str that appears in names
   // return null if there is none
   let newPos = 0; // new pos
@@ -1805,6 +1839,7 @@ function getSymbol(str) {
   return { input: st, tag: tagst, output: st, ttype: tokens.CONST, val: true }; // added val bit
 }
 
+/** @param {string} node */
 function removeBrackets(node) {
   let st;
   if (node.charAt(0) === '{' && node.charAt(node.length - 1) === '}') {
@@ -1831,11 +1866,11 @@ function removeBrackets(node) {
       // st = node.charAt(node.length-7);
       st = node.substr(node.length - 8);
       if (st === '\\right)}' || st === '\\right]}' || st === '\\right.}') {
-        node = `{${node.substr(leftchop)}`;
-        node = `${node.substr(0, node.length - 8)}}`;
+        node = '{' + node.substr(leftchop);
+        node = node.substr(0, node.length - 8) + '}';
       } else if (st === '\\rbrace}') {
-        node = `{${node.substr(leftchop)}`;
-        node = `${node.substr(0, node.length - 14)}}`;
+        node = '{' + node.substr(leftchop);
+        node = node.substr(0, node.length - 14) + '}';
       }
     }
   }
@@ -1855,10 +1890,7 @@ function removeBrackets(node) {
   Each terminal symbol is translated into a corresponding mathml node.
 */
 
-let nestingDepth;
-let previousSymbol;
-let currentSymbol;
-
+/** @param {Symbol} symb */
 function getTeXsymbol(symb) {
   let pre;
   if (typeof symb.val === 'boolean' && symb.val) {
@@ -1875,7 +1907,11 @@ function getTeXsymbol(symb) {
   }
 }
 
-function parseSexpr(str) {
+/**
+ * @param {string} str
+ * @param {number} depth
+ */
+function parseSexpr(str, depth) {
   // parses str and returns [node,tailstr]
   let symbol;
   let node;
@@ -1885,7 +1921,7 @@ function parseSexpr(str) {
   let newFrag = '';
   str = removeCharsAndBlanks(str, 0);
   symbol = getSymbol(str); // either a token or a bracket or empty
-  if (!symbol || (symbol.ttype === tokens.RIGHTBRACKET && nestingDepth > 0)) {
+  if (!symbol || (symbol.ttype === tokens.RIGHTBRACKET && depth > 0)) {
     return [null, str];
   }
   if (symbol.ttype === tokens.DEFINITION) {
@@ -1904,11 +1940,11 @@ function parseSexpr(str) {
       }
 
     case tokens.LEFTBRACKET: // read (expr+)
-      nestingDepth++;
+      depth++;
       str = removeCharsAndBlanks(str, symbol.input.length);
 
-      result = parseExpr(str, true);
-      nestingDepth--;
+      result = parseExpr(str, true, depth);
+      depth--;
       var leftchop = 0;
       if (result[0].substr(0, 6) === '\\right') {
         st = result[0].charAt(6);
@@ -1968,7 +2004,7 @@ function parseSexpr(str) {
       return [newFrag, str];
     case tokens.UNARY:
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseSexpr(str);
+      result = parseSexpr(str, depth);
       if (result[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
@@ -2014,12 +2050,12 @@ function parseSexpr(str) {
       }
     case tokens.BINARY:
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseSexpr(str);
+      result = parseSexpr(str, depth);
       if (result[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
       result[0] = removeBrackets(result[0]);
-      var result2 = parseSexpr(result[1]);
+      var result2 = parseSexpr(result[1], depth);
       if (result2[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
@@ -2040,10 +2076,10 @@ function parseSexpr(str) {
       return [`{\\quad\\text{${symbol.input}}\\quad}`, str];
     case tokens.LEFTRIGHT:
       //    if (rightvert) return [null,str]; else rightvert = true;
-      nestingDepth++;
+      depth++;
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseExpr(str, false);
-      nestingDepth--;
+      result = parseExpr(str, false, depth);
+      depth--;
       var st = '';
       st = result[0].charAt(result[0].length - 1);
       // alert(result[0].lastChild+'***'+st);
@@ -2064,20 +2100,24 @@ function parseSexpr(str) {
   }
 }
 
-function parseIexpr(str) {
+/**
+ * @param {string} str
+ * @param {number} depth
+ */
+function parseIexpr(str, depth) {
   let sym2;
   let node;
   let result;
   str = removeCharsAndBlanks(str, 0);
   const sym1 = getSymbol(str);
-  result = parseSexpr(str);
+  result = parseSexpr(str, depth);
   node = result[0];
   str = result[1];
   const symbol = getSymbol(str);
   if (symbol.ttype === tokens.INFIX && symbol.input !== '/') {
     str = removeCharsAndBlanks(str, symbol.input.length);
     // if (symbol.input === '/') result = parseIexpr(str); else
-    result = parseSexpr(str);
+    result = parseSexpr(str, depth);
     // show box in place of missing argument
     if (result[0] === null) {
       result[0] = '{}';
@@ -2090,7 +2130,7 @@ function parseIexpr(str) {
       sym2 = getSymbol(str);
       if (sym2.input === '^') {
         str = removeCharsAndBlanks(str, sym2.input.length);
-        const res2 = parseSexpr(str);
+        const res2 = parseSexpr(str, depth);
         res2[0] = removeBrackets(res2[0]);
         str = res2[1];
         node = `{${node}`;
@@ -2108,7 +2148,7 @@ function parseIexpr(str) {
     if (typeof sym1.func !== 'undefined' && sym1.func) {
       sym2 = getSymbol(str);
       if (sym2.ttype !== tokens.INFIX && sym2.ttype !== tokens.RIGHTBRACKET) {
-        result = parseIexpr(str);
+        result = parseIexpr(str, depth);
         node = `{${node}${result[0]}}`;
         str = result[1];
       }
@@ -2118,7 +2158,12 @@ function parseIexpr(str) {
   return [node, str];
 }
 
-function parseExpr(str, rightbracket) {
+/**
+ * @param {string} str
+ * @param {boolean} rightbracket
+ * @param {number} depth
+ */
+function parseExpr(str, rightbracket, depth) {
   let symbol;
   let node;
   let result;
@@ -2128,13 +2173,13 @@ function parseExpr(str, rightbracket) {
   let addedright = false;
   do {
     str = removeCharsAndBlanks(str, 0);
-    result = parseIexpr(str);
+    result = parseIexpr(str, depth);
     node = result[0];
     str = result[1];
     symbol = getSymbol(str);
     if (symbol.ttype === tokens.INFIX && symbol.input === '/') {
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseIexpr(str);
+      result = parseIexpr(str, depth);
 
       // show box in place of missing argument
       if (result[0] === null) {
@@ -2154,7 +2199,7 @@ function parseExpr(str, rightbracket) {
   } while (
     ((symbol.ttype !== tokens.RIGHTBRACKET &&
       (symbol.ttype !== tokens.LEFTRIGHT || rightbracket)) ||
-      nestingDepth === 0) &&
+      depth === 0) &&
     symbol &&
     symbol.output
   );
@@ -2162,7 +2207,7 @@ function parseExpr(str, rightbracket) {
     symbol.ttype === tokens.RIGHTBRACKET ||
     symbol.ttype === tokens.LEFTRIGHT
   ) {
-    //    if (nestingDepth > 0) nestingDepth--;
+    //    if (depth > 0) depth--;
     const len = newFrag.length;
     if (len > 2 && newFrag.charAt(0) === '{' && newFrag.indexOf(',') > 0) {
       // could be matrix (total rewrite from .js)
@@ -2311,7 +2356,7 @@ function parseExpr(str, rightbracket) {
       addedright = true;
     }
   }
-  if (nestingDepth > 0 && !addedright) {
+  if (depth > 0 && !addedright) {
     newFrag += '\\right.'; // adjust for non-matching left brackets
     // todo: adjust for non-matching right brackets
   }
@@ -2321,7 +2366,6 @@ function parseExpr(str, rightbracket) {
 
 /** @param {string} str */
 export default function asciimathToTex(str) {
-  nestingDepth = 0;
   str = str
     .replace(/(&nbsp;|\u00a0|&#160;)/g, '')
     .replace(/&gt;/g, '>')
@@ -2329,20 +2373,5 @@ export default function asciimathToTex(str) {
   if (!str.match(/\S/)) {
     return '';
   }
-  return parseExpr(str.replace(/^\s+/g, ''), false)[0];
-}
-
-{
-  const otherSymbols = symbols
-    .filter(item => item.tex && item.notexcopy !== true)
-    .map(item => ({
-      input: item.tex,
-      tag: item.tag,
-      output: item.output,
-      ttype: item.ttype,
-      acc: item.acc || false,
-    }));
-  symbols.push(...otherSymbols);
-
-  refreshSymbols();
+  return parseExpr(str.replace(/^\s+/g, ''), false, 0)[0];
 }
