@@ -5,6 +5,7 @@
 #### NEW
 #### FIX
 - documentation build system
+- user provided delimiters should be first
 
 ### 0.7.0 2019-08-03
 #### NEW
