@@ -4,8 +4,12 @@
 #### BREAKING
 #### NEW
 #### FIX
-- documentation build system
-- user provided delimiters should be first
+
+### 0.8.0 2020-03-12
+- upgrade dependencies
+#### FIX
+- documentation build system: `npm run docs`
+- user provided delimiters take priority
 
 ### 0.7.0 2019-08-03
 #### NEW
