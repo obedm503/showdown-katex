@@ -16,5 +16,6 @@ const ejs = require('ejs');
     writeFile(join(__dirname, 'dist/index.html'), out),
     copyFile('CHANGELOG.md', 'dist/CHANGELOG.md'),
     copyFile('README.md', 'dist/README.md'),
+    copyFile('examples.md', 'dist/examples.md'),
   ]);
 })();
