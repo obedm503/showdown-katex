@@ -44,10 +44,10 @@ const getConfig = (config = {}) => ({
   throwOnError: false, // fail silently
   errorColor: '#ff0000',
   ...config,
-  delimiters: [
+  delimiters: (config.delimiters || []).concat([
     { left: '$$', right: '$$', display: false },
     { left: '~', right: '~', display: false, asciimath: true },
-  ].concat(config.delimiters || []),
+  ]),
 });
 
 const showdownKatex = userConfig => () => {

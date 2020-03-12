@@ -25,6 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+// @ts-check
 
 // token types
 const tokens = {
@@ -41,14 +42,33 @@ const tokens = {
   TEXT: 10,
 };
 
+/**
+ * @typedef Symbol
+ * @property {string} input
+ * @property {string} tag
+ * @property {string} [output]
+ * @property {string} [tex]
+ * @property {number} [tType]
+ * @property {boolean} [val]
+ * @property {boolean} [noTexCopy]
+ * @property {boolean} [invisible]
+ * @property {boolean} [func]
+ * @property {string[]} [rewriteLeftRight]
+ * @property {boolean} [acc]
+ * @property {string} [atName]
+ * @property {string} [atVal]
+ */
+
+/** @type {Symbol} */
 const quoteSymbol = {
   input: "'",
   tag: 'mtext',
   output: 'mbox',
   tex: null,
-  ttype: tokens.TEXT,
+  tType: tokens.TEXT,
 };
 
+/** @type {Array<Symbol>} */
 const symbols = [
   // some greek symbols
   {
@@ -56,538 +76,538 @@ const symbols = [
     tag: 'mi',
     output: '\u03B1',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'beta',
     tag: 'mi',
     output: '\u03B2',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'chi', tag: 'mi', output: '\u03C7', tex: null, ttype: tokens.CONST },
+  { input: 'chi', tag: 'mi', output: '\u03C7', tex: null, tType: tokens.CONST },
   {
     input: 'delta',
     tag: 'mi',
     output: '\u03B4',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Delta',
     tag: 'mo',
     output: '\u0394',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'epsi',
     tag: 'mi',
     output: '\u03B5',
     tex: 'epsilon',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'varepsilon',
     tag: 'mi',
     output: '\u025B',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'eta', tag: 'mi', output: '\u03B7', tex: null, ttype: tokens.CONST },
+  { input: 'eta', tag: 'mi', output: '\u03B7', tex: null, tType: tokens.CONST },
   {
     input: 'gamma',
     tag: 'mi',
     output: '\u03B3',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Gamma',
     tag: 'mo',
     output: '\u0393',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'iota',
     tag: 'mi',
     output: '\u03B9',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'kappa',
     tag: 'mi',
     output: '\u03BA',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'lambda',
     tag: 'mi',
     output: '\u03BB',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Lambda',
     tag: 'mo',
     output: '\u039B',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'lamda',
     tag: 'mi',
     output: 'lambda',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'Lamda',
     tag: 'mi',
     output: 'Lambda',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
-  { input: 'mu', tag: 'mi', output: '\u03BC', tex: null, ttype: tokens.CONST },
-  { input: 'nu', tag: 'mi', output: '\u03BD', tex: null, ttype: tokens.CONST },
+  { input: 'mu', tag: 'mi', output: '\u03BC', tex: null, tType: tokens.CONST },
+  { input: 'nu', tag: 'mi', output: '\u03BD', tex: null, tType: tokens.CONST },
   {
     input: 'omega',
     tag: 'mi',
     output: '\u03C9',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Omega',
     tag: 'mo',
     output: '\u03A9',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'phi', tag: 'mi', output: '\u03C6', tex: null, ttype: tokens.CONST },
+  { input: 'phi', tag: 'mi', output: '\u03C6', tex: null, tType: tokens.CONST },
   {
     input: 'varphi',
     tag: 'mi',
     output: '\u03D5',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'Phi', tag: 'mo', output: '\u03A6', tex: null, ttype: tokens.CONST },
-  { input: 'pi', tag: 'mi', output: '\u03C0', tex: null, ttype: tokens.CONST },
-  { input: 'Pi', tag: 'mo', output: '\u03A0', tex: null, ttype: tokens.CONST },
-  { input: 'psi', tag: 'mi', output: '\u03C8', tex: null, ttype: tokens.CONST },
-  { input: 'Psi', tag: 'mi', output: '\u03A8', tex: null, ttype: tokens.CONST },
-  { input: 'rho', tag: 'mi', output: '\u03C1', tex: null, ttype: tokens.CONST },
+  { input: 'Phi', tag: 'mo', output: '\u03A6', tex: null, tType: tokens.CONST },
+  { input: 'pi', tag: 'mi', output: '\u03C0', tex: null, tType: tokens.CONST },
+  { input: 'Pi', tag: 'mo', output: '\u03A0', tex: null, tType: tokens.CONST },
+  { input: 'psi', tag: 'mi', output: '\u03C8', tex: null, tType: tokens.CONST },
+  { input: 'Psi', tag: 'mi', output: '\u03A8', tex: null, tType: tokens.CONST },
+  { input: 'rho', tag: 'mi', output: '\u03C1', tex: null, tType: tokens.CONST },
   {
     input: 'sigma',
     tag: 'mi',
     output: '\u03C3',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Sigma',
     tag: 'mo',
     output: '\u03A3',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'tau', tag: 'mi', output: '\u03C4', tex: null, ttype: tokens.CONST },
+  { input: 'tau', tag: 'mi', output: '\u03C4', tex: null, tType: tokens.CONST },
   {
     input: 'theta',
     tag: 'mi',
     output: '\u03B8',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'vartheta',
     tag: 'mi',
     output: '\u03D1',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'Theta',
     tag: 'mo',
     output: '\u0398',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'upsilon',
     tag: 'mi',
     output: '\u03C5',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'xi', tag: 'mi', output: '\u03BE', tex: null, ttype: tokens.CONST },
-  { input: 'Xi', tag: 'mo', output: '\u039E', tex: null, ttype: tokens.CONST },
+  { input: 'xi', tag: 'mi', output: '\u03BE', tex: null, tType: tokens.CONST },
+  { input: 'Xi', tag: 'mo', output: '\u039E', tex: null, tType: tokens.CONST },
   {
     input: 'zeta',
     tag: 'mi',
     output: '\u03B6',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
 
   // binary operation symbols
-  { input: '*', tag: 'mo', output: '\u22C5', tex: 'cdot', ttype: tokens.CONST },
-  { input: '**', tag: 'mo', output: '\u2217', tex: 'ast', ttype: tokens.CONST },
+  { input: '*', tag: 'mo', output: '\u22C5', tex: 'cdot', tType: tokens.CONST },
+  { input: '**', tag: 'mo', output: '\u2217', tex: 'ast', tType: tokens.CONST },
   {
     input: '***',
     tag: 'mo',
     output: '\u22C6',
     tex: 'star',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '// ',
     tag: 'mo',
     output: '/',
     tex: '/',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
     val: true,
-    notexcopy: true,
+    noTexCopy: true,
   },
   {
     input: '\\\\',
     tag: 'mo',
     output: '\\',
     tex: 'backslash',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'setminus',
     tag: 'mo',
     output: '\\',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'xx',
     tag: 'mo',
     output: '\u00D7',
     tex: 'times',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|><',
     tag: 'mo',
     output: '\u22C9',
     tex: 'ltimes',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '><|',
     tag: 'mo',
     output: '\u22CA',
     tex: 'rtimes',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|><|',
     tag: 'mo',
     output: '\u22C8',
     tex: 'bowtie',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '-:', tag: 'mo', output: '\u00F7', tex: 'div', ttype: tokens.CONST },
+  { input: '-:', tag: 'mo', output: '\u00F7', tex: 'div', tType: tokens.CONST },
   {
     input: 'divide',
     tag: 'mo',
     output: '-:',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
-  { input: '@', tag: 'mo', output: '\u2218', tex: 'circ', ttype: tokens.CONST },
+  { input: '@', tag: 'mo', output: '\u2218', tex: 'circ', tType: tokens.CONST },
   {
     input: 'o+',
     tag: 'mo',
     output: '\u2295',
     tex: 'oplus',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'ox',
     tag: 'mo',
     output: '\u2297',
     tex: 'otimes',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'o.',
     tag: 'mo',
     output: '\u2299',
     tex: 'odot',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'sum',
     tag: 'mo',
     output: '\u2211',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: 'prod',
     tag: 'mo',
     output: '\u220F',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: '^^',
     tag: 'mo',
     output: '\u2227',
     tex: 'wedge',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '^^^',
     tag: 'mo',
     output: '\u22C0',
     tex: 'bigwedge',
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
-  { input: 'vv', tag: 'mo', output: '\u2228', tex: 'vee', ttype: tokens.CONST },
+  { input: 'vv', tag: 'mo', output: '\u2228', tex: 'vee', tType: tokens.CONST },
   {
     input: 'vvv',
     tag: 'mo',
     output: '\u22C1',
     tex: 'bigvee',
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
-  { input: 'nn', tag: 'mo', output: '\u2229', tex: 'cap', ttype: tokens.CONST },
+  { input: 'nn', tag: 'mo', output: '\u2229', tex: 'cap', tType: tokens.CONST },
   {
     input: 'nnn',
     tag: 'mo',
     output: '\u22C2',
     tex: 'bigcap',
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
-  { input: 'uu', tag: 'mo', output: '\u222A', tex: 'cup', ttype: tokens.CONST },
+  { input: 'uu', tag: 'mo', output: '\u222A', tex: 'cup', tType: tokens.CONST },
   {
     input: 'uuu',
     tag: 'mo',
     output: '\u22C3',
     tex: 'bigcup',
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: 'overset',
     tag: 'mover',
     output: 'stackrel',
     tex: null,
-    ttype: tokens.BINARY,
+    tType: tokens.BINARY,
   },
   {
     input: 'underset',
     tag: 'munder',
     output: 'stackrel',
     tex: null,
-    ttype: tokens.BINARY,
+    tType: tokens.BINARY,
   },
 
   // binary relation symbols
-  { input: '!=', tag: 'mo', output: '\u2260', tex: 'ne', ttype: tokens.CONST },
-  { input: ':=', tag: 'mo', output: ':=', tex: null, ttype: tokens.CONST },
-  { input: 'lt', tag: 'mo', output: '<', tex: null, ttype: tokens.CONST },
-  { input: 'gt', tag: 'mo', output: '>', tex: null, ttype: tokens.CONST },
-  { input: '<=', tag: 'mo', output: '\u2264', tex: 'le', ttype: tokens.CONST },
+  { input: '!=', tag: 'mo', output: '\u2260', tex: 'ne', tType: tokens.CONST },
+  { input: ':=', tag: 'mo', output: ':=', tex: null, tType: tokens.CONST },
+  { input: 'lt', tag: 'mo', output: '<', tex: null, tType: tokens.CONST },
+  { input: 'gt', tag: 'mo', output: '>', tex: null, tType: tokens.CONST },
+  { input: '<=', tag: 'mo', output: '\u2264', tex: 'le', tType: tokens.CONST },
   {
     input: 'lt=',
     tag: 'mo',
     output: '\u2264',
     tex: 'leq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'gt=',
     tag: 'mo',
     output: '\u2265',
     tex: 'geq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '>=', tag: 'mo', output: '\u2265', tex: 'ge', ttype: tokens.CONST },
+  { input: '>=', tag: 'mo', output: '\u2265', tex: 'ge', tType: tokens.CONST },
   {
     input: '-<',
     tag: 'mo',
     output: '\u227A',
     tex: 'prec',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '-lt', tag: 'mo', output: '\u227A', tex: null, ttype: tokens.CONST },
+  { input: '-lt', tag: 'mo', output: '\u227A', tex: null, tType: tokens.CONST },
   {
     input: '>-',
     tag: 'mo',
     output: '\u227B',
     tex: 'succ',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '-<=',
     tag: 'mo',
     output: '\u2AAF',
     tex: 'preceq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '>-=',
     tag: 'mo',
     output: '\u2AB0',
     tex: 'succeq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'in', tag: 'mo', output: '\u2208', tex: null, ttype: tokens.CONST },
+  { input: 'in', tag: 'mo', output: '\u2208', tex: null, tType: tokens.CONST },
   {
     input: '!in',
     tag: 'mo',
     output: '\u2209',
     tex: 'notin',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'sub',
     tag: 'mo',
     output: '\u2282',
     tex: 'subset',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'sup',
     tag: 'mo',
     output: '\u2283',
     tex: 'supset',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'sube',
     tag: 'mo',
     output: '\u2286',
     tex: 'subseteq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'supe',
     tag: 'mo',
     output: '\u2287',
     tex: 'supseteq',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '-=',
     tag: 'mo',
     output: '\u2261',
     tex: 'equiv',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '~=',
     tag: 'mo',
     output: '\u2245',
     tex: 'stackrel{\\sim}{=}',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   }, // back hack b/c mimetex doesn't support /cong
   {
     input: 'cong',
     tag: 'mo',
     output: '~=',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: '~~',
     tag: 'mo',
     output: '\u2248',
     tex: 'approx',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'prop',
     tag: 'mo',
     output: '\u221D',
     tex: 'propto',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
 
   // logical symbols
-  { input: 'and', tag: 'mtext', output: 'and', tex: null, ttype: tokens.SPACE },
-  { input: 'or', tag: 'mtext', output: 'or', tex: null, ttype: tokens.SPACE },
+  { input: 'and', tag: 'mtext', output: 'and', tex: null, tType: tokens.SPACE },
+  { input: 'or', tag: 'mtext', output: 'or', tex: null, tType: tokens.SPACE },
   {
     input: 'not',
     tag: 'mo',
     output: '\u00AC',
     tex: 'neg',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '=>',
     tag: 'mo',
     output: '\u21D2',
     tex: 'Rightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'implies',
     tag: 'mo',
     output: '=>',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
-  { input: 'if', tag: 'mo', output: 'if', tex: null, ttype: tokens.SPACE },
+  { input: 'if', tag: 'mo', output: 'if', tex: null, tType: tokens.SPACE },
   {
     input: '<=>',
     tag: 'mo',
     output: '\u21D4',
     tex: 'Leftrightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'iff',
     tag: 'mo',
     output: '<=>',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'AA',
     tag: 'mo',
     output: '\u2200',
     tex: 'forall',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'EE',
     tag: 'mo',
     output: '\u2203',
     tex: 'exists',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '_|_',
     tag: 'mo',
     output: '\u22A5',
     tex: 'bot',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: 'TT', tag: 'mo', output: '\u22A4', tex: 'top', ttype: tokens.CONST },
+  { input: 'TT', tag: 'mo', output: '\u22A4', tex: 'top', tType: tokens.CONST },
   {
     input: '|--',
     tag: 'mo',
     output: '\u22A2',
     tex: 'vdash',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|==',
     tag: 'mo',
     output: '\u22A8',
     tex: 'models',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   }, // mimetex doesn't support
 
   // grouping brackets
@@ -596,7 +616,7 @@ const symbols = [
     tag: 'mo',
     output: '(',
     tex: null,
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
     val: true,
   },
   {
@@ -604,7 +624,7 @@ const symbols = [
     tag: 'mo',
     output: ')',
     tex: null,
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
     val: true,
   },
   {
@@ -612,7 +632,7 @@ const symbols = [
     tag: 'mo',
     output: '[',
     tex: null,
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
     val: true,
   },
   {
@@ -620,7 +640,7 @@ const symbols = [
     tag: 'mo',
     output: ']',
     tex: null,
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
     val: true,
   },
   {
@@ -628,21 +648,21 @@ const symbols = [
     tag: 'mo',
     output: '{',
     tex: 'lbrace',
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
   },
   {
     input: '}',
     tag: 'mo',
     output: '}',
     tex: 'rbrace',
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
   },
   {
     input: '|',
     tag: 'mo',
     output: '|',
     tex: null,
-    ttype: tokens.LEFTRIGHT,
+    tType: tokens.LEFTRIGHT,
     val: true,
   },
   // {input:'||', tag:'mo', output:'||', tex:null, ttype:LEFTRIGHT},
@@ -651,35 +671,35 @@ const symbols = [
     tag: 'mo',
     output: '\u2329',
     tex: 'langle',
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
   },
   {
     input: ':)',
     tag: 'mo',
     output: '\u232A',
     tex: 'rangle',
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
   },
   {
     input: '<<',
     tag: 'mo',
     output: '\u2329',
     tex: 'langle',
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
   },
   {
     input: '>>',
     tag: 'mo',
     output: '\u232A',
     tex: 'rangle',
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
   },
   {
     input: '{:',
     tag: 'mo',
     output: '{:',
     tex: null,
-    ttype: tokens.LEFTBRACKET,
+    tType: tokens.LEFTBRACKET,
     invisible: true,
   },
   {
@@ -687,118 +707,118 @@ const symbols = [
     tag: 'mo',
     output: ':}',
     tex: null,
-    ttype: tokens.RIGHTBRACKET,
+    tType: tokens.RIGHTBRACKET,
     invisible: true,
   },
 
   // miscellaneous symbols
-  { input: 'int', tag: 'mo', output: '\u222B', tex: null, ttype: tokens.CONST },
+  { input: 'int', tag: 'mo', output: '\u222B', tex: null, tType: tokens.CONST },
   {
     input: 'dx',
     tag: 'mi',
     output: '{:d x:}',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'dy',
     tag: 'mi',
     output: '{:d y:}',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'dz',
     tag: 'mi',
     output: '{:d z:}',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'dt',
     tag: 'mi',
     output: '{:d t:}',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'oint',
     tag: 'mo',
     output: '\u222E',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'del',
     tag: 'mo',
     output: '\u2202',
     tex: 'partial',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'grad',
     tag: 'mo',
     output: '\u2207',
     tex: 'nabla',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '+-', tag: 'mo', output: '\u00B1', tex: 'pm', ttype: tokens.CONST },
+  { input: '+-', tag: 'mo', output: '\u00B1', tex: 'pm', tType: tokens.CONST },
   {
     input: 'O/',
     tag: 'mo',
     output: '\u2205',
     tex: 'emptyset',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'oo',
     tag: 'mo',
     output: '\u221E',
     tex: 'infty',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'aleph',
     tag: 'mo',
     output: '\u2135',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '...', tag: 'mo', output: '...', tex: 'ldots', ttype: tokens.CONST },
+  { input: '...', tag: 'mo', output: '...', tex: 'ldots', tType: tokens.CONST },
   {
     input: ':.',
     tag: 'mo',
     output: '\u2234',
     tex: 'therefore',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: ":'",
     tag: 'mo',
     output: '\u2235',
     tex: 'because',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '/_',
     tag: 'mo',
     output: '\u2220',
     tex: 'angle',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '/_\\',
     tag: 'mo',
     output: '\u25B3',
     tex: 'triangle',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '\\ ',
     tag: 'mo',
     output: '\u00A0',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
     val: true,
   },
   {
@@ -806,153 +826,153 @@ const symbols = [
     tag: 'mo',
     output: '\u2322',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '%',
     tag: 'mo',
     output: '%',
     tex: '%',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'quad',
     tag: 'mo',
     output: '\u00A0\u00A0',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'qquad',
     tag: 'mo',
     output: '\u00A0\u00A0\u00A0\u00A0',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'cdots',
     tag: 'mo',
     output: '\u22EF',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'vdots',
     tag: 'mo',
     output: '\u22EE',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'ddots',
     tag: 'mo',
     output: '\u22F1',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'diamond',
     tag: 'mo',
     output: '\u22C4',
     tex: null,
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'square',
     tag: 'mo',
     output: '\u25A1',
     tex: 'boxempty',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|__',
     tag: 'mo',
     output: '\u230A',
     tex: 'lfloor',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '__|',
     tag: 'mo',
     output: '\u230B',
     tex: 'rfloor',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|~',
     tag: 'mo',
     output: '\u2308',
     tex: 'lceil',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'lceiling',
     tag: 'mo',
     output: '|~',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: '~|',
     tag: 'mo',
     output: '\u2309',
     tex: 'rceil',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'rceiling',
     tag: 'mo',
     output: '~|',
     tex: null,
-    ttype: tokens.DEFINITION,
+    tType: tokens.DEFINITION,
   },
   {
     input: 'CC',
     tag: 'mo',
     output: '\u2102',
     tex: 'mathbb{C}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'NN',
     tag: 'mo',
     output: '\u2115',
     tex: 'mathbb{N}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'QQ',
     tag: 'mo',
     output: '\u211A',
     tex: 'mathbb{Q}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'RR',
     tag: 'mo',
     output: '\u211D',
     tex: 'mathbb{R}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'ZZ',
     tag: 'mo',
     output: '\u2124',
     tex: 'mathbb{Z}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'f',
     tag: 'mi',
     output: 'f',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
     val: true,
   },
@@ -961,7 +981,7 @@ const symbols = [
     tag: 'mi',
     output: 'g',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
     val: true,
   },
@@ -975,21 +995,21 @@ const symbols = [
     tag: 'mo',
     output: 'lim',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: 'Lim',
     tag: 'mo',
     output: 'Lim',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: 'sin',
     tag: 'mo',
     output: 'sin',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -997,7 +1017,7 @@ const symbols = [
     tag: 'mo',
     output: 'cos',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1005,7 +1025,7 @@ const symbols = [
     tag: 'mo',
     output: 'tan',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1013,7 +1033,7 @@ const symbols = [
     tag: 'mo',
     output: 'arcsin',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1021,7 +1041,7 @@ const symbols = [
     tag: 'mo',
     output: 'arccos',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1029,7 +1049,7 @@ const symbols = [
     tag: 'mo',
     output: 'arctan',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1037,7 +1057,7 @@ const symbols = [
     tag: 'mo',
     output: 'sinh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1045,7 +1065,7 @@ const symbols = [
     tag: 'mo',
     output: 'cosh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1053,7 +1073,7 @@ const symbols = [
     tag: 'mo',
     output: 'tanh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1061,7 +1081,7 @@ const symbols = [
     tag: 'mo',
     output: 'cot',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1069,7 +1089,7 @@ const symbols = [
     tag: 'mo',
     output: 'coth',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1077,7 +1097,7 @@ const symbols = [
     tag: 'mo',
     output: 'sech',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1085,7 +1105,7 @@ const symbols = [
     tag: 'mo',
     output: 'csch',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1093,7 +1113,7 @@ const symbols = [
     tag: 'mo',
     output: 'sec',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1101,7 +1121,7 @@ const symbols = [
     tag: 'mo',
     output: 'csc',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1109,7 +1129,7 @@ const symbols = [
     tag: 'mo',
     output: 'log',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1117,7 +1137,7 @@ const symbols = [
     tag: 'mo',
     output: 'ln',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1125,43 +1145,43 @@ const symbols = [
     tag: 'mo',
     output: 'abs',
     tex: null,
-    ttype: tokens.UNARY,
-    notexcopy: true,
-    rewriteleftright: ['|', '|'],
+    tType: tokens.UNARY,
+    noTexCopy: true,
+    rewriteLeftRight: ['|', '|'],
   },
   {
     input: 'norm',
     tag: 'mo',
     output: 'norm',
     tex: null,
-    ttype: tokens.UNARY,
-    notexcopy: true,
-    rewriteleftright: ['\\|', '\\|'],
+    tType: tokens.UNARY,
+    noTexCopy: true,
+    rewriteLeftRight: ['\\|', '\\|'],
   },
   {
     input: 'floor',
     tag: 'mo',
     output: 'floor',
     tex: null,
-    ttype: tokens.UNARY,
-    notexcopy: true,
-    rewriteleftright: ['\\lfloor', '\\rfloor'],
+    tType: tokens.UNARY,
+    noTexCopy: true,
+    rewriteLeftRight: ['\\lfloor', '\\rfloor'],
   },
   {
     input: 'ceil',
     tag: 'mo',
     output: 'ceil',
     tex: null,
-    ttype: tokens.UNARY,
-    notexcopy: true,
-    rewriteleftright: ['\\lceil', '\\rceil'],
+    tType: tokens.UNARY,
+    noTexCopy: true,
+    rewriteLeftRight: ['\\lceil', '\\rceil'],
   },
   {
     input: 'Sin',
     tag: 'mo',
     output: 'sin',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1169,7 +1189,7 @@ const symbols = [
     tag: 'mo',
     output: 'cos',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1177,7 +1197,7 @@ const symbols = [
     tag: 'mo',
     output: 'tan',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1185,7 +1205,7 @@ const symbols = [
     tag: 'mo',
     output: 'arcsin',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1193,7 +1213,7 @@ const symbols = [
     tag: 'mo',
     output: 'arccos',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1201,7 +1221,7 @@ const symbols = [
     tag: 'mo',
     output: 'arctan',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1209,7 +1229,7 @@ const symbols = [
     tag: 'mo',
     output: 'sinh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1217,7 +1237,7 @@ const symbols = [
     tag: 'mo',
     output: 'cosh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1225,7 +1245,7 @@ const symbols = [
     tag: 'mo',
     output: 'tanh',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1233,7 +1253,7 @@ const symbols = [
     tag: 'mo',
     output: 'cot',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1241,7 +1261,7 @@ const symbols = [
     tag: 'mo',
     output: 'sec',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1249,7 +1269,7 @@ const symbols = [
     tag: 'mo',
     output: 'csc',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1257,7 +1277,7 @@ const symbols = [
     tag: 'mo',
     output: 'log',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1265,7 +1285,7 @@ const symbols = [
     tag: 'mo',
     output: 'ln',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1273,9 +1293,9 @@ const symbols = [
     tag: 'mo',
     output: 'abs',
     tex: null,
-    ttype: tokens.UNARY,
-    notexcopy: true,
-    rewriteleftright: ['|', '|'],
+    tType: tokens.UNARY,
+    noTexCopy: true,
+    rewriteLeftRight: ['|', '|'],
   },
 
   {
@@ -1283,7 +1303,7 @@ const symbols = [
     tag: 'mo',
     output: 'det',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1291,24 +1311,24 @@ const symbols = [
     tag: 'mo',
     output: 'exp',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
-  { input: 'dim', tag: 'mo', output: 'dim', tex: null, ttype: tokens.CONST },
+  { input: 'dim', tag: 'mo', output: 'dim', tex: null, tType: tokens.CONST },
   {
     input: 'mod',
     tag: 'mo',
     output: 'mod',
     tex: 'text{mod}',
-    ttype: tokens.CONST,
-    notexcopy: true,
+    tType: tokens.CONST,
+    noTexCopy: true,
   },
   {
     input: 'gcd',
     tag: 'mo',
     output: 'gcd',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
   },
   {
@@ -1316,25 +1336,25 @@ const symbols = [
     tag: 'mo',
     output: 'lcm',
     tex: 'text{lcm}',
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     func: true,
-    notexcopy: true,
+    noTexCopy: true,
   },
-  { input: 'lub', tag: 'mo', output: 'lub', tex: null, ttype: tokens.CONST },
-  { input: 'glb', tag: 'mo', output: 'glb', tex: null, ttype: tokens.CONST },
+  { input: 'lub', tag: 'mo', output: 'lub', tex: null, tType: tokens.CONST },
+  { input: 'glb', tag: 'mo', output: 'glb', tex: null, tType: tokens.CONST },
   {
     input: 'min',
     tag: 'mo',
     output: 'min',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
   {
     input: 'max',
     tag: 'mo',
     output: 'max',
     tex: null,
-    ttype: tokens.UNDEROVER,
+    tType: tokens.UNDEROVER,
   },
 
   // arrows
@@ -1343,85 +1363,85 @@ const symbols = [
     tag: 'mo',
     output: '\u2191',
     tex: 'uparrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'darr',
     tag: 'mo',
     output: '\u2193',
     tex: 'downarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'rarr',
     tag: 'mo',
     output: '\u2192',
     tex: 'rightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
-  { input: '->', tag: 'mo', output: '\u2192', tex: 'to', ttype: tokens.CONST },
+  { input: '->', tag: 'mo', output: '\u2192', tex: 'to', tType: tokens.CONST },
   {
     input: '>->',
     tag: 'mo',
     output: '\u21A3',
     tex: 'rightarrowtail',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '->>',
     tag: 'mo',
     output: '\u21A0',
     tex: 'twoheadrightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '>->>',
     tag: 'mo',
     output: '\u2916',
     tex: 'twoheadrightarrowtail',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: '|->',
     tag: 'mo',
     output: '\u21A6',
     tex: 'mapsto',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'larr',
     tag: 'mo',
     output: '\u2190',
     tex: 'leftarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'harr',
     tag: 'mo',
     output: '\u2194',
     tex: 'leftrightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'rArr',
     tag: 'mo',
     output: '\u21D2',
     tex: 'Rightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'lArr',
     tag: 'mo',
     output: '\u21D0',
     tex: 'Leftarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
   {
     input: 'hArr',
     tag: 'mo',
     output: '\u21D4',
     tex: 'Leftrightarrow',
-    ttype: tokens.CONST,
+    tType: tokens.CONST,
   },
 
   // commands with argument
@@ -1430,47 +1450,47 @@ const symbols = [
     tag: 'msqrt',
     output: 'sqrt',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'root',
     tag: 'mroot',
     output: 'root',
     tex: null,
-    ttype: tokens.BINARY,
+    tType: tokens.BINARY,
   },
-  { input: 'frac', tag: 'mfrac', output: '/', tex: null, ttype: tokens.BINARY },
-  { input: '/', tag: 'mfrac', output: '/', tex: null, ttype: tokens.INFIX },
+  { input: 'frac', tag: 'mfrac', output: '/', tex: null, tType: tokens.BINARY },
+  { input: '/', tag: 'mfrac', output: '/', tex: null, tType: tokens.INFIX },
   {
     input: 'stackrel',
     tag: 'mover',
     output: 'stackrel',
     tex: null,
-    ttype: tokens.BINARY,
+    tType: tokens.BINARY,
   },
-  { input: '_', tag: 'msub', output: '_', tex: null, ttype: tokens.INFIX },
-  { input: '^', tag: 'msup', output: '^', tex: null, ttype: tokens.INFIX },
+  { input: '_', tag: 'msub', output: '_', tex: null, tType: tokens.INFIX },
+  { input: '^', tag: 'msup', output: '^', tex: null, tType: tokens.INFIX },
 
   {
     input: 'cancel',
     tag: 'menclose',
     output: 'cancel',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'Sqrt',
     tag: 'msqrt',
     output: 'sqrt',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'hat',
     tag: 'mover',
     output: '\u005E',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1478,7 +1498,7 @@ const symbols = [
     tag: 'mover',
     output: '\u00AF',
     tex: 'overline',
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1486,7 +1506,7 @@ const symbols = [
     tag: 'mover',
     output: '\u2192',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1494,7 +1514,7 @@ const symbols = [
     tag: 'mover',
     output: '~',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1502,7 +1522,7 @@ const symbols = [
     tag: 'mover',
     output: '.',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1510,7 +1530,7 @@ const symbols = [
     tag: 'mover',
     output: '..',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1518,7 +1538,7 @@ const symbols = [
     tag: 'munder',
     output: '\u0332',
     tex: 'underline',
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1526,7 +1546,7 @@ const symbols = [
     tag: 'munder',
     output: '\u23DF',
     tex: 'underbrace',
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
   {
@@ -1534,7 +1554,7 @@ const symbols = [
     tag: 'mover',
     output: '\u23DE',
     tex: 'overbrace',
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
     acc: true,
   },
 
@@ -1543,151 +1563,158 @@ const symbols = [
     tag: 'mtext',
     output: 'text',
     tex: null,
-    ttype: tokens.TEXT,
+    tType: tokens.TEXT,
   },
   {
     input: 'mbox',
     tag: 'mtext',
     output: 'mbox',
     tex: null,
-    ttype: tokens.TEXT,
+    tType: tokens.TEXT,
   },
   quoteSymbol,
   // { input: 'var', tag: 'mstyle', atname: 'fontstyle', atval: 'italic', output: 'var', tex: null, ttype: tokens.UNARY },
-  { input: 'color', tag: 'mstyle', ttype: tokens.BINARY },
+  { input: 'color', tag: 'mstyle', tType: tokens.BINARY },
   {
     input: 'bb',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'bold',
+    atName: 'mathvariant',
+    atVal: 'bold',
     output: 'bb',
     tex: 'mathbf',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathbf',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'bold',
+    atName: 'mathvariant',
+    atVal: 'bold',
     output: 'mathbf',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'sf',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'sans-serif',
+    atName: 'mathvariant',
+    atVal: 'sans-serif',
     output: 'sf',
     tex: 'mathsf',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathsf',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'sans-serif',
+    atName: 'mathvariant',
+    atVal: 'sans-serif',
     output: 'mathsf',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'bbb',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'double-struck',
+    atName: 'mathvariant',
+    atVal: 'double-struck',
     output: 'bbb',
     tex: 'mathbb',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathbb',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'double-struck',
+    atName: 'mathvariant',
+    atVal: 'double-struck',
     output: 'mathbb',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'cc',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'script',
+    atName: 'mathvariant',
+    atVal: 'script',
     output: 'cc',
     tex: 'mathcal',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathcal',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'script',
+    atName: 'mathvariant',
+    atVal: 'script',
     output: 'mathcal',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'tt',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'monospace',
+    atName: 'mathvariant',
+    atVal: 'monospace',
     output: 'tt',
     tex: 'mathtt',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathtt',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'monospace',
+    atName: 'mathvariant',
+    atVal: 'monospace',
     output: 'mathtt',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
   {
     input: 'fr',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'fraktur',
+    atName: 'mathvariant',
+    atVal: 'fraktur',
     output: 'fr',
     tex: 'mathfrak',
-    ttype: tokens.UNARY,
-    notexcopy: true,
+    tType: tokens.UNARY,
+    noTexCopy: true,
   },
   {
     input: 'mathfrak',
     tag: 'mstyle',
-    atname: 'mathvariant',
-    atval: 'fraktur',
+    atName: 'mathvariant',
+    atVal: 'fraktur',
     output: 'mathfrak',
     tex: null,
-    ttype: tokens.UNARY,
+    tType: tokens.UNARY,
   },
 ];
 
+/** @type {Array<string>} */
 let inputSymbols = [];
+{
+  /** @type {Array<Symbol>} */
+  const otherSymbols = symbols
+    .filter(item => item.tex && item.noTexCopy !== true)
+    .map(item => ({
+      input: item.tex,
+      tag: item.tag,
+      output: item.output,
+      tType: item.tType,
+      acc: item.acc || false,
+    }));
+  symbols.push(...otherSymbols);
 
-function refreshSymbols() {
   symbols.sort((s1, s2) => (s1.input > s2.input ? 1 : -1));
   inputSymbols = symbols.map(item => item.input);
 }
 
-// function newcommand(oldstr, newstr) {
-//   symbols.push({ input: oldstr, tag: 'mo', output: newstr, tex: null, ttype: tokens.DEFINITION });
-//   refreshSymbols();
-// }
-
-// function newsymbol(symbolobj) {
-//   symbols.push(symbolobj);
-//   refreshSymbols();
-// }
-
+/**
+ * @param {string} str
+ * @param {number} n
+ * @returns {string}
+ */
 function removeCharsAndBlanks(str, n) {
   // remove n characters and any following blanks
   let st;
@@ -1707,15 +1734,20 @@ function removeCharsAndBlanks(str, n) {
   return st.slice(i);
 }
 
+/**
+ * @param {string[]} arr
+ * @param {string} str
+ * @param {number} n
+ * @returns {number}
+ */
 function position(arr, str, n) {
   // return position >=n where str appears or would be inserted
   // assumes arr is sorted
   if (n === 0) {
     let len = arr.length;
-    let m;
     n = -1;
     while (n + 1 < len) {
-      m = (n + len) >> 1;
+      let m = (n + len) >> 1;
       if (arr[m] < str) {
         n = m;
       } else {
@@ -1731,7 +1763,14 @@ function position(arr, str, n) {
   return i; // i=arr.length || arr[i]>=str
 }
 
+/**
+ * @param {string} str
+ * @returns {Symbol}
+ */
 function getSymbol(str) {
+  let previousSymbol;
+  let currentSymbol;
+
   // return maximal initial substring of str that appears in names
   // return null if there is none
   let newPos = 0; // new pos
@@ -1759,7 +1798,7 @@ function getSymbol(str) {
   }
   previousSymbol = currentSymbol;
   if (match !== '') {
-    currentSymbol = symbols[matchPos].ttype;
+    currentSymbol = symbols[matchPos].tType;
     return symbols[matchPos];
   }
   // if str[0] is a digit or - return maxsubstring of digits.digits
@@ -1797,20 +1836,25 @@ function getSymbol(str) {
       input: st,
       tag: tagst,
       output: st,
-      ttype: tokens.UNARY,
+      tType: tokens.UNARY,
       func: true,
       val: true,
     };
   }
-  return { input: st, tag: tagst, output: st, ttype: tokens.CONST, val: true }; // added val bit
+
+  // added val bit
+  return { input: st, tag: tagst, output: st, tType: tokens.CONST, val: true };
 }
 
+/**
+ * @param {string} node
+ * @returns {string}
+ */
 function removeBrackets(node) {
-  let st;
   if (node.charAt(0) === '{' && node.charAt(node.length - 1) === '}') {
     let leftchop = 0;
 
-    st = node.substr(1, 5);
+    let st = node.substr(1, 5);
     if (st === '\\left') {
       st = node.charAt(6);
       if (st === '(' || st === '[' || st === '{') {
@@ -1831,11 +1875,11 @@ function removeBrackets(node) {
       // st = node.charAt(node.length-7);
       st = node.substr(node.length - 8);
       if (st === '\\right)}' || st === '\\right]}' || st === '\\right.}') {
-        node = `{${node.substr(leftchop)}`;
-        node = `${node.substr(0, node.length - 8)}}`;
+        node = '{' + node.substr(leftchop);
+        node = node.substr(0, node.length - 8) + '}';
       } else if (st === '\\rbrace}') {
-        node = `{${node.substr(leftchop)}`;
-        node = `${node.substr(0, node.length - 14)}}`;
+        node = '{' + node.substr(leftchop);
+        node = node.substr(0, node.length - 14) + '}';
       }
     }
   }
@@ -1855,12 +1899,12 @@ function removeBrackets(node) {
   Each terminal symbol is translated into a corresponding mathml node.
 */
 
-let nestingDepth;
-let previousSymbol;
-let currentSymbol;
-
+/**
+ * @param {Symbol} symb
+ * @returns {string}
+ */
 function getTeXsymbol(symb) {
-  let pre;
+  let pre = '';
   if (typeof symb.val === 'boolean' && symb.val) {
     pre = '';
   } else {
@@ -1875,24 +1919,25 @@ function getTeXsymbol(symb) {
   }
 }
 
-function parseSexpr(str) {
+/**
+ * @param {string} str
+ * @param {number} depth
+ * @returns {[string, string]}
+ */
+function parseSexpr(str, depth) {
   // parses str and returns [node,tailstr]
-  let symbol;
-  let node;
-  let result;
-  let i;
   // const rightvert = false,
-  let newFrag = '';
   str = removeCharsAndBlanks(str, 0);
-  symbol = getSymbol(str); // either a token or a bracket or empty
-  if (!symbol || (symbol.ttype === tokens.RIGHTBRACKET && nestingDepth > 0)) {
+
+  let symbol = getSymbol(str); // either a token or a bracket or empty
+  if (!symbol || (symbol.tType === tokens.RIGHTBRACKET && depth > 0)) {
     return [null, str];
   }
-  if (symbol.ttype === tokens.DEFINITION) {
+  if (symbol.tType === tokens.DEFINITION) {
     str = symbol.output + removeCharsAndBlanks(str, symbol.input.length);
     symbol = getSymbol(str);
   }
-  switch (symbol.ttype) {
+  switch (symbol.tType) {
     case tokens.UNDEROVER:
     case tokens.CONST:
       str = removeCharsAndBlanks(str, symbol.input.length);
@@ -1903,12 +1948,13 @@ function parseSexpr(str) {
         return [`{${texsymbol}}`, str];
       }
 
-    case tokens.LEFTBRACKET: // read (expr+)
-      nestingDepth++;
+    case tokens.LEFTBRACKET: {
+      // read (expr+)
+      depth++;
       str = removeCharsAndBlanks(str, symbol.input.length);
 
-      result = parseExpr(str, true);
-      nestingDepth--;
+      const result = parseExpr(str, true, depth);
+      depth--;
       var leftchop = 0;
       if (result[0].substr(0, 6) === '\\right') {
         st = result[0].charAt(6);
@@ -1923,6 +1969,8 @@ function parseSexpr(str) {
           }
         }
       }
+
+      let node = '';
       if (leftchop > 0) {
         result[0] = result[0].substr(leftchop);
         if (symbol.invisible) {
@@ -1938,10 +1986,13 @@ function parseSexpr(str) {
         }
       }
       return [node, result[1]];
-    case tokens.TEXT:
+    }
+    case tokens.TEXT: {
       if (symbol !== quoteSymbol) {
         str = removeCharsAndBlanks(str, symbol.input.length);
       }
+      /** @type {number} */
+      let i;
       if (str.charAt(0) === '{') {
         i = str.indexOf('}');
       } else if (str.charAt(0) === '(') {
@@ -1957,6 +2008,7 @@ function parseSexpr(str) {
         i = str.length;
       }
       st = str.slice(1, i);
+      let newFrag = '';
       if (st.charAt(0) === ' ') {
         newFrag = '\\ ';
       }
@@ -1966,9 +2018,10 @@ function parseSexpr(str) {
       }
       str = removeCharsAndBlanks(str, i + 1);
       return [newFrag, str];
-    case tokens.UNARY:
+    }
+    case tokens.UNARY: {
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseSexpr(str);
+      const result = parseSexpr(str, depth);
       if (result[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
@@ -1985,7 +2038,7 @@ function parseSexpr(str) {
         ) {
           return [`{${getTeXsymbol(symbol)}}`, str];
         } else {
-          node = `{${getTeXsymbol(symbol)}{${result[0]}}}`;
+          const node = `{${getTeXsymbol(symbol)}{${result[0]}}}`;
           return [node, result[1]];
         }
       }
@@ -1996,11 +2049,11 @@ function parseSexpr(str) {
       } else if (symbol.input === 'cancel') {
         // cancel
         return [`\\cancel{${result[0]}}`, result[1]];
-      } else if (typeof symbol.rewriteleftright !== 'undefined') {
+      } else if (typeof symbol.rewriteLeftRight !== 'undefined') {
         // abs, floor, ceil
         return [
-          `{\\left${symbol.rewriteleftright[0]}${result[0]}\\right${
-            symbol.rewriteleftright[1]
+          `{\\left${symbol.rewriteLeftRight[0]}${result[0]}\\right${
+            symbol.rewriteLeftRight[1]
           }}`,
           result[1],
         ];
@@ -2012,18 +2065,20 @@ function parseSexpr(str) {
         // font change command
         return [`{${getTeXsymbol(symbol)}{${result[0]}}}`, result[1]];
       }
-    case tokens.BINARY:
+    }
+    case tokens.BINARY: {
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseSexpr(str);
+      const result = parseSexpr(str, depth);
       if (result[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
       result[0] = removeBrackets(result[0]);
-      var result2 = parseSexpr(result[1]);
+      var result2 = parseSexpr(result[1], depth);
       if (result2[0] === null) {
         return [`{${getTeXsymbol(symbol)}}`, str];
       }
       result2[0] = removeBrackets(result2[0]);
+      let newFrag = '';
       if (symbol.input === 'color') {
         newFrag = `{\\color{${result[0].replace(/[{}]/g, '')}}${result2[0]}}`;
       } else if (symbol.input === 'root') {
@@ -2032,31 +2087,32 @@ function parseSexpr(str) {
         newFrag = `{${getTeXsymbol(symbol)}{${result[0]}}{${result2[0]}}}`;
       }
       return [newFrag, result2[1]];
+    }
     case tokens.INFIX:
       str = removeCharsAndBlanks(str, symbol.input.length);
       return [symbol.output, str];
     case tokens.SPACE:
       str = removeCharsAndBlanks(str, symbol.input.length);
       return [`{\\quad\\text{${symbol.input}}\\quad}`, str];
-    case tokens.LEFTRIGHT:
+    case tokens.LEFTRIGHT: {
       //    if (rightvert) return [null,str]; else rightvert = true;
-      nestingDepth++;
+      depth++;
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseExpr(str, false);
-      nestingDepth--;
+      const result = parseExpr(str, false, depth);
+      depth--;
       var st = '';
       st = result[0].charAt(result[0].length - 1);
       // alert(result[0].lastChild+'***'+st);
       if (st === '|') {
         // its an absolute value subterm
-        node = `{\\left|${result[0]}}`;
+        const node = `{\\left|${result[0]}}`;
         return [node, result[1]];
       } else {
         // the '|' is a \mid
-        node = '{\\mid}';
+        const node = '{\\mid}';
         return [node, str];
       }
-
+    }
     default:
       // alert('default');
       str = removeCharsAndBlanks(str, symbol.input.length);
@@ -2064,61 +2120,73 @@ function parseSexpr(str) {
   }
 }
 
-function parseIexpr(str) {
+/**
+ * @param {string} str
+ * @param {number} depth
+ * @returns {[string, string]}
+ */
+function parseIexpr(str, depth) {
   let sym2;
-  let node;
-  let result;
   str = removeCharsAndBlanks(str, 0);
   const sym1 = getSymbol(str);
-  result = parseSexpr(str);
-  node = result[0];
+  let result = parseSexpr(str, depth);
+  let node = result[0];
   str = result[1];
   const symbol = getSymbol(str);
-  if (symbol.ttype === tokens.INFIX && symbol.input !== '/') {
-    str = removeCharsAndBlanks(str, symbol.input.length);
-    // if (symbol.input === '/') result = parseIexpr(str); else
-    result = parseSexpr(str);
-    // show box in place of missing argument
-    if (result[0] === null) {
-      result[0] = '{}';
+
+  if (!(symbol.tType === tokens.INFIX && symbol.input !== '/')) {
+    return [node, str];
+  }
+
+  str = removeCharsAndBlanks(str, symbol.input.length);
+  // if (symbol.input === '/') result = parseIexpr(str); else
+  result = parseSexpr(str, depth);
+  // show box in place of missing argument
+  if (result[0] === null) {
+    result[0] = '{}';
+  } else {
+    result[0] = removeBrackets(result[0]);
+  }
+  str = result[1];
+  //    if (symbol.input === '/') removeBrackets(node);
+  if (symbol.input === '_') {
+    sym2 = getSymbol(str);
+    if (sym2.input === '^') {
+      str = removeCharsAndBlanks(str, sym2.input.length);
+      const res2 = parseSexpr(str, depth);
+      res2[0] = removeBrackets(res2[0]);
+      str = res2[1];
+      node = `{${node}`;
+      node += `_{${result[0]}}`;
+      node += `^{${res2[0]}}`;
+      node += '}';
     } else {
-      result[0] = removeBrackets(result[0]);
+      node += `_{${result[0]}}`;
     }
-    str = result[1];
-    //    if (symbol.input === '/') removeBrackets(node);
-    if (symbol.input === '_') {
-      sym2 = getSymbol(str);
-      if (sym2.input === '^') {
-        str = removeCharsAndBlanks(str, sym2.input.length);
-        const res2 = parseSexpr(str);
-        res2[0] = removeBrackets(res2[0]);
-        str = res2[1];
-        node = `{${node}`;
-        node += `_{${result[0]}}`;
-        node += `^{${res2[0]}}`;
-        node += '}';
-      } else {
-        node += `_{${result[0]}}`;
-      }
-    } else {
-      // must be ^
-      // node = '{'+node+'}^{'+result[0]+'}';
-      node = `${node}^{${result[0]}}`;
-    }
-    if (typeof sym1.func !== 'undefined' && sym1.func) {
-      sym2 = getSymbol(str);
-      if (sym2.ttype !== tokens.INFIX && sym2.ttype !== tokens.RIGHTBRACKET) {
-        result = parseIexpr(str);
-        node = `{${node}${result[0]}}`;
-        str = result[1];
-      }
+  } else {
+    // must be ^
+    // node = '{'+node+'}^{'+result[0]+'}';
+    node = `${node}^{${result[0]}}`;
+  }
+  if (typeof sym1.func !== 'undefined' && sym1.func) {
+    sym2 = getSymbol(str);
+    if (sym2.tType !== tokens.INFIX && sym2.tType !== tokens.RIGHTBRACKET) {
+      result = parseIexpr(str, depth);
+      node = `{${node}${result[0]}}`;
+      str = result[1];
     }
   }
 
   return [node, str];
 }
 
-function parseExpr(str, rightbracket) {
+/**
+ * @param {string} str
+ * @param {boolean} rightbracket
+ * @param {number} depth
+ * @returns {[string, string]}
+ */
+function parseExpr(str, rightbracket, depth) {
   let symbol;
   let node;
   let result;
@@ -2128,13 +2196,13 @@ function parseExpr(str, rightbracket) {
   let addedright = false;
   do {
     str = removeCharsAndBlanks(str, 0);
-    result = parseIexpr(str);
+    result = parseIexpr(str, depth);
     node = result[0];
     str = result[1];
     symbol = getSymbol(str);
-    if (symbol.ttype === tokens.INFIX && symbol.input === '/') {
+    if (symbol.tType === tokens.INFIX && symbol.input === '/') {
       str = removeCharsAndBlanks(str, symbol.input.length);
-      result = parseIexpr(str);
+      result = parseIexpr(str, depth);
 
       // show box in place of missing argument
       if (result[0] === null) {
@@ -2152,17 +2220,17 @@ function parseExpr(str, rightbracket) {
       newFrag += node;
     }
   } while (
-    ((symbol.ttype !== tokens.RIGHTBRACKET &&
-      (symbol.ttype !== tokens.LEFTRIGHT || rightbracket)) ||
-      nestingDepth === 0) &&
+    ((symbol.tType !== tokens.RIGHTBRACKET &&
+      (symbol.tType !== tokens.LEFTRIGHT || rightbracket)) ||
+      depth === 0) &&
     symbol &&
     symbol.output
   );
   if (
-    symbol.ttype === tokens.RIGHTBRACKET ||
-    symbol.ttype === tokens.LEFTRIGHT
+    symbol.tType === tokens.RIGHTBRACKET ||
+    symbol.tType === tokens.LEFTRIGHT
   ) {
-    //    if (nestingDepth > 0) nestingDepth--;
+    //    if (depth > 0) depth--;
     const len = newFrag.length;
     if (len > 2 && newFrag.charAt(0) === '{' && newFrag.indexOf(',') > 0) {
       // could be matrix (total rewrite from .js)
@@ -2311,7 +2379,7 @@ function parseExpr(str, rightbracket) {
       addedright = true;
     }
   }
-  if (nestingDepth > 0 && !addedright) {
+  if (depth > 0 && !addedright) {
     newFrag += '\\right.'; // adjust for non-matching left brackets
     // todo: adjust for non-matching right brackets
   }
@@ -2319,9 +2387,11 @@ function parseExpr(str, rightbracket) {
   return [newFrag, str];
 }
 
-/** @param {string} str */
+/**
+ * @param {string} str
+ * @returns {string}
+ */
 export default function asciimathToTex(str) {
-  nestingDepth = 0;
   str = str
     .replace(/(&nbsp;|\u00a0|&#160;)/g, '')
     .replace(/&gt;/g, '>')
@@ -2329,20 +2399,5 @@ export default function asciimathToTex(str) {
   if (!str.match(/\S/)) {
     return '';
   }
-  return parseExpr(str.replace(/^\s+/g, ''), false)[0];
-}
-
-{
-  const otherSymbols = symbols
-    .filter(item => item.tex && item.notexcopy !== true)
-    .map(item => ({
-      input: item.tex,
-      tag: item.tag,
-      output: item.output,
-      ttype: item.ttype,
-      acc: item.acc || false,
-    }));
-  symbols.push(...otherSymbols);
-
-  refreshSymbols();
+  return parseExpr(str.replace(/^\s+/g, ''), false, 0)[0];
 }

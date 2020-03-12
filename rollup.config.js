@@ -73,7 +73,6 @@ if (process.env.MIN === 'true') {
 config.plugins.push(
   license({
     banner: `/**!
- * @file showdown-katex: markdown + ( latex and/or asciimath )
  * @author obedm503
  * @git https://github.com/obedm503/showdown-katex.git
  * @examples https://obedm503.github.io/showdown-katex/
