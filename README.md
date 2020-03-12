@@ -20,7 +20,7 @@ These are the defaults:
   throwOnError: false, // allows katex to fail silently
   errorColor: '#ff0000',
   delimiters: [
-    { left: "$$", right: "$$", display: false }, // katex default
+    { left: "$$", right: "$$", display: false },
     { left: '~', right: '~', display: false, asciimath: true },
   ],
 }
@@ -46,6 +46,31 @@ Examples:
 </script>
 ```
 Check [katex for more details](https://github.com/Khan/KaTeX#user-content-rendering-options).
+
+### Default Delimiters
+
+| Format    | Left | Right | Display mode |
+| --------- | ---- | ----- | ------------ |
+| Latex     | `$$` | `$$`  | `false`      |
+| Asciimath | `~`  | `~`   | `false`      |
+
+To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
+
+Custom delimiters won't disable the defaults, so you can use both custom and default delimiters.
+
+```js
+const converter = new showdown.Converter({
+  extensions: [
+    showdownKatex({
+      delimiters: [{ left: '( ͡° ͜ʖ ͡°)', right: '( ͡° ͜ʖ ͡°)', asciimath: true }],
+    }),
+  ],
+});
+converter.makeHtml(
+  'some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), you can still use ~ E=Mc^2 ~',
+);
+```
+
 
 ## FOUC
 
