@@ -1704,7 +1704,7 @@ let inputSymbols = [];
       tType: item.tType,
       acc: item.acc || false,
     }));
-  symbols.push(...otherSymbols);
+  symbols.push.apply(symbols, otherSymbols);
 
   symbols.sort((s1, s2) => (s1.input > s2.input ? 1 : -1));
   inputSymbols = symbols.map(item => item.input);
@@ -2052,9 +2052,7 @@ function parseSexpr(str, depth) {
       } else if (typeof symbol.rewriteLeftRight !== 'undefined') {
         // abs, floor, ceil
         return [
-          `{\\left${symbol.rewriteLeftRight[0]}${result[0]}\\right${
-            symbol.rewriteLeftRight[1]
-          }}`,
+          `{\\left${symbol.rewriteLeftRight[0]}${result[0]}\\right${symbol.rewriteLeftRight[1]}}`,
           result[1],
         ];
       } else if (symbol.acc === true) {
