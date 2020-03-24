@@ -125,7 +125,8 @@ var some = normal('code');
             params.set('source', val);
             if (e) {
               // only set ?source when the user types in the box
-              var url = location.origin + '?' + params.toString();
+              var url =
+                location.origin + location.pathname + '?' + params.toString();
               history.pushState({ path: url }, document.title, url);
             }
           } catch (e) {
