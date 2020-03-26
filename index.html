@@ -12,18 +12,26 @@
       }
       #sandbox {
         background-color: silver;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-wrap: nowrap;
       }
-      #sandbox > .col-md-6 > #sandbox-out,
-      #sandbox > .col-md-6 > #sandbox-in {
+      #sandbox > div {
+        width: 100%;
+        padding: 0 15px;
+        margin-bottom: 20px;
+      }
+      #sandbox > div > #sandbox-out,
+      #sandbox > div > #sandbox-in {
+        resize: none;
         border: none;
         box-sizing: border-box;
-        height: 350px;
-        padding: 10px;
-        resize: none;
+        min-height: 350px;
+        height: 100%;
         width: 100%;
       }
       #sandbox-in {
-        margin: 10px auto;
         background: #000;
         color: #fff;
         font: 14px Menlo, monospace;
@@ -35,8 +43,17 @@
       }
       #sandbox-out {
         color: black;
-        margin: 20px auto;
         background: white;
+        padding: 10px;
+      }
+
+      @media screen and (min-width: 991px) {
+        #sandbox {
+          flex-direction: row;
+        }
+        #sandbox > div {
+          width: 50%;
+        }
       }
     </style>
   </head>
@@ -50,7 +67,7 @@
         <h3>Try the live demo</h3>
       </div>
       <div class="row" id="sandbox">
-        <div class="col-md-6">
+        <div>
           <h4 class="text-center">
             Input Markdown
           </h4>
@@ -70,7 +87,7 @@ var some = normal('code');
 ```
           </textarea>
         </div>
-        <div class="col-md-6">
+        <div>
           <h4 class="text-center">
             Output
           </h4>
@@ -125,7 +142,8 @@ var some = normal('code');
             params.set('source', val);
             if (e) {
               // only set ?source when the user types in the box
-              var url = location.origin + '?' + params.toString();
+              var url =
+                location.origin + location.pathname + '?' + params.toString();
               history.pushState({ path: url }, document.title, url);
             }
           } catch (e) {
