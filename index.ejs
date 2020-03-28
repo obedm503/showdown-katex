@@ -158,6 +158,19 @@ var some = normal('code');
               text: '${bootmark}',
             },
           });
+
+          var raf = window.requestAnimationFrame;
+          if (raf) {
+            raf(function() {
+              try {
+                var inHeight = $input.get(0).scrollHeight;
+                var outHeight = $output.get(0).clientHeight;
+                if (inHeight < outHeight) {
+                  $input.height(outHeight);
+                }
+              } catch (e) {}
+            });
+          }
         }
 
         $input.bind('input propertychange', render);
