@@ -1,6 +1,6 @@
 ## Examples
 
-You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$$ latex here $$` and `~ asciimath here ~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`. Because code block style is more limited, `displayMode` will be the `displayMode` passed to the extension config or the [katex default](https://github.com/Khan/KaTeX#rendering-options).
+You can write math in 2 ways: inline and code block. Inline refers to using delimiters: `$latex here$` and `~asciimath here~`, or any custom delimiters. Code block style refers to using tagged markdown code blocks. The tags can be either `latex` or `asciimath`. Because code block style is more limited, `displayMode` will be the `displayMode` passed to the extension config or the [katex default](https://github.com/Khan/KaTeX#rendering-options).
 
 ### Inline
 

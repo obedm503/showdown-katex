@@ -13,21 +13,25 @@ if (process.env.TARGET === 'cjs') {
   global.document = jsdom.window.document;
 }
 
-/**
- * @param {string} latex
- * @param config
- */
-function renderBlock(latex, config) {
+/** @param {{math:string, config, isAsciimath?: boolean }} opt */
+function renderBlock({ math, config, isAsciimath }) {
+  const latex = isAsciimath ? asciimathToTex(math) : math;
   const html = katex.renderToString(latex, config);
-  return `<div title="${latex.trim()}">${html}</div>`;
+  return `<div title="${math.trim()}">${html}</div>`;
+}
+
+/** @param {{math:string, config, isAsciimath?: boolean }} opt */
+function renderInline({ math, config, isAsciimath }) {
+  const latex = isAsciimath ? asciimathToTex(math) : math;
+  const html = katex.renderToString(
+    latex,
+    Object.assign({}, config, { displayMode: false }),
+  );
+  return ` <span title="${math.trim()}">${html}</span> `;
 }
 
 // katex config
 function getConfig(config = {}) {
-  const delimiters = (config.delimiters || []).concat([
-    { left: '$$', right: '$$', display: false },
-    { left: '~', right: '~', display: false, asciimath: true },
-  ]);
   return Object.assign(
     {
       displayMode: true,
@@ -35,7 +39,7 @@ function getConfig(config = {}) {
       errorColor: '#ff0000',
     },
     config,
-    { delimiters },
+    { delimiters: config.delimiters || [] },
   );
 }
 
@@ -45,7 +49,7 @@ export default function showdownKatex(userConfig) {
 
   const asmDelimiters = [];
   const texDelimiters = [];
-  config.delimiters.forEach(d => {
+  config.delimiters.forEach((d) => {
     if (d.asciimath) {
       asmDelimiters.push(d);
     } else {
@@ -64,19 +68,32 @@ export default function showdownKatex(userConfig) {
       {
         type: 'lang',
         regex: /(?:^```asciimath)([\s\S]*?)(?:^```)/gm,
-        replace(block, asm) {
-          const latex = asciimathToTex(asm);
-          return renderBlock(latex, config);
+        replace(block, math) {
+          return renderBlock({ math, config, isAsciimath: true });
         },
       },
       {
         type: 'lang',
         regex: /(?:^```latex)([\s\S]*?)(?:^```)/gm,
-        replace(block, latex) {
-          return renderBlock(latex, config);
+        replace(block, math) {
+          return renderBlock({ math, config });
         },
       },
       // render inline math
+      {
+        type: 'lang',
+        regex: /(?:\s|^)~([\s\S]*?\S)~(?:\s|$)/gm, // ~asciimath~
+        replace(block, math) {
+          return renderInline({ math, config, isAsciimath: true });
+        },
+      },
+      {
+        type: 'lang',
+        regex: /(?:\s|^)¨D([\s\S]*?\S)¨D(?:\s|$)/gm, // $latex$
+        replace(block, math) {
+          return renderInline({ math, config });
+        },
+      },
       {
         type: 'output',
         filter(html = '') {

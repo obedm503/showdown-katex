@@ -51,7 +51,7 @@ Check [katex for more details](https://github.com/Khan/KaTeX#user-content-render
 
 | Format    | Left | Right | Display mode |
 | --------- | ---- | ----- | ------------ |
-| Latex     | `$$` | `$$`  | `false`      |
+| Latex     | `$` | `$`  | `false`      |
 | Asciimath | `~`  | `~`   | `false`      |
 
 To define custom delimiters simply define a `delimiters` property in the config as an array of objects. Each object MUST have a `left` (`string`) property with the left delimiter, and a `right` (`string`) property with the right delimiter. The oject may also have a `display` (`boolean`) property if the delimiter should use display mode instead of inline mode, and an `asciimath` (`boolean`) id the delimiter is Asciimath instead of Latex.
@@ -67,7 +67,7 @@ const converter = new showdown.Converter({
   ],
 });
 converter.makeHtml(
-  'some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), you can still use ~ E=Mc^2 ~',
+  'some text here, ( ͡° ͜ʖ ͡°) E=mc^2 ( ͡° ͜ʖ ͡°), you can still use ~E=Mc^2~',
 );
 ```
 
