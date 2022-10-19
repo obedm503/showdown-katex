@@ -1,5 +1,5 @@
 import test from 'ava';
-import asciimathToTex from './asciimath-to-tex';
+import asciimathToTex from './asciimath-to-tex.js';
 
 test('just a number', t => {
   t.is(asciimathToTex('5'), '{5}');
